@@ -1,0 +1,60 @@
+{
+    "public": [
+        "gast",
+        "mitglied",
+        "schwimmkurs",
+        "rettungsschwimmer",
+        "redaktion",
+        "technik",
+        "kassenwart",
+        "vorstand",
+        "admin"
+    ],
+    "mitglieder": [
+        "mitglied",
+        "schwimmkurs",
+        "rettungsschwimmer",
+        "redaktion",
+        "technik",
+        "kassenwart",
+        "vorstand",
+        "admin"
+    ],
+    "schwimmkurse": [
+        "schwimmkurs",
+        "rettungsschwimmer",
+        "vorstand",
+        "admin"
+    ],
+    "rettungsdienst": [
+        "rettungsschwimmer",
+        "vorstand",
+        "admin"
+    ],
+    "veranstaltungen": [
+        "redaktion",
+        "vorstand",
+        "admin"
+    ],
+    "technik": [
+        "technik",
+        "vorstand",
+        "admin"
+    ],
+    "wartung": [
+        "technik",
+        "admin"
+    ],
+    "finanzen": [
+        "kassenwart",
+        "vorstand",
+        "admin"
+    ],
+    "vorstand": [
+        "vorstand",
+        "admin"
+    ],
+    "admin": [
+        "admin"
+    ]
+}

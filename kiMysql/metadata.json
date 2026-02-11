@@ -1,0 +1,177 @@
+{
+    "ffd_abwasser": {
+        "consumption": "Verbrauchte Abwassermenge seit letzter Messung in Liter",
+        "counter": "Zählerstand des Abwasserzählers (kumuliert) in Liter",
+        "datetime": "Zeitpunkt der Erfassung des Abwasserzählers",
+        "id": "Interne ID der Messung\/Erfassung"
+    },
+    "ffd_frischwasser": {
+        "consumption": "Verbrauchte Frischwassermenge seit letzter Messung in Liter",
+        "counter": "Zählerstand des Frischwasserzählers (kumuliert) in Liter",
+        "datetime": "Zeitpunkt der Erfassung des Frischwasserzählers",
+        "id": "Interne ID der Messung\/Erfassung",
+        "source": "Quelle des Wassers (z. B. Stadtwerk, Brunnen)"
+    },
+    "ffd_lastgang": {
+        "date": "Datum der Lastgang-Messung",
+        "time": "Uhrzeit der Messung",
+        "value": "Gemessene elektrische Leistung zu diesem Zeitpunkt in Watt"
+    },
+    "ffd_precipitation": {
+        "dateTime": "Zeitpunkt der Messung",
+        "id": "Interne ID der Niederschlagsmessung",
+        "rain_1h": "Niederschlag der letzten Stunde",
+        "rain_3h": "Niederschlag der letzten 3 Stunden"
+    },
+    "ffd_projects": {
+        "budget": "Projektbudget",
+        "end": "Projektende",
+        "id": "Projekt-ID",
+        "longDescription": "Ausführliche Projektbeschreibung",
+        "projectNumber": "Projektnummer",
+        "shortDescription": "Kurzbeschreibung des Projekts",
+        "start": "Projektbeginn"
+    },
+    "ffd_pv": {
+        "consumption": "Verbrauch aus PV in Watt",
+        "counter": "PV-Zählerstand in Watt",
+        "datetime": "Zeitpunkt der PV-Messung",
+        "dc_power_input1": "Gleichstromleistung Input 1",
+        "dc_power_input2": "Gleichstromleistung Input 2",
+        "feed_actual": "Aktuelle Einspeisung ins Netz",
+        "id": "Interne ID",
+        "operational_health": "Betriebsstatus (0–100)",
+        "operational_time": "Betriebsdauer in Minuten"
+    },
+    "ffd_pvFeedIn": {
+        "Datetime": "Zeitpunkt der Einspeisemessung",
+        "value": "Eingespeiste Strommenge"
+    },
+    "ffd_rechnungen": {
+        "brutto": "Bruttobetrag",
+        "datetime": "Datum der Rechnung",
+        "id": "Rechnungs-ID",
+        "netto": "Nettobetrag",
+        "number": "Rechnungsnummer",
+        "posted": "Buchungsstatus",
+        "project_id": "Zugehörige Projekt-ID",
+        "supplier_id": "Lieferanten-ID"
+    },
+    "ffd_seasonweeks": {
+        "closed": "Betriebsstatus (geschlossen)",
+        "date": "Datum der Kalenderwoche",
+        "holidays": "Angabe ob Ferienzeit",
+        "kiosk": "Kioskstatus in dieser Woche",
+        "weeks": "Kalenderwochenbeschreibung"
+    },
+    "ffd_Stromrechnungen": {
+        "cost_per_kwh": "Kosten pro Kilowattstunde Strom",
+        "end_date": "Enddatum des Abrechnungszeitraums",
+        "start_date": "Startdatum des Abrechnungszeitraums",
+        "total_consumption": "Gesamtstromverbrauch im Zeitraum",
+        "total_cost": "Gesamtkosten für Strom im Zeitraum"
+    },
+    "ffd_supplier": {
+        "city": "Ort",
+        "iban": "IBAN des Lieferanten",
+        "id": "Lieferanten-ID",
+        "name": "Name des Lieferanten",
+        "street": "Straße des Lieferanten",
+        "zip": "Postleitzahl"
+    },
+    "ffd_ticketSales": {
+        "amount": "Anzahl verkaufter Tickets",
+        "bon": "Belegnummer",
+        "date": "Datum des Verkaufs",
+        "description": "Beschreibung des Tickets",
+        "id": "Interne Verkaufs-ID",
+        "payment": "Zahlungsmethode (bar, Karte)",
+        "price": "Einzelpreis des Tickets",
+        "time": "Uhrzeit des Verkaufs",
+        "total": "Gesamter Ticketumsatz",
+        "type": "Typ des Tickets"
+    },
+    "ffd_weather": {
+        "cloud": "Bewölkung in %",
+        "dateTime": "Zeitpunkt der Wettermessung",
+        "feels_like": "gefühlte Temperatur",
+        "humidity": "Luftfeuchtigkeit in %",
+        "id": "Interne Wetter-ID",
+        "pressure": "Luftdruck in hPa",
+        "rain_1h": "Niederschlag letzte Stunde",
+        "rain_3h": "Niederschlag letzte 3 Stunden",
+        "temp": "Temperatur in °C",
+        "temp_max": "Tagesmaximum",
+        "temp_min": "Tagesminimum"
+    },
+    "ffd_weather_forecast": {
+        "cloud": "prognostizierte Bewölkung",
+        "created": "Zeitpunkt der Vorhersageerstellung",
+        "dateTime": "Vorhersagezeitpunkt",
+        "feels_like": "gefühlte Temperaturvorhersage",
+        "humidity": "prognostizierte Luftfeuchtigkeit",
+        "pressure": "prognostizierter Luftdruck",
+        "temp": "Temperaturvorhersage",
+        "temp_max": "max. prognostizierte Temperatur",
+        "temp_min": "min. prognostizierte Temperatur"
+    },
+    "Protokollunterzeichner": {
+        "E-Mail": "E-Mail-Adresse des Unterzeichners",
+        "id": "Interne ID des Unterzeichners",
+        "Nachname": "Nachname des Protokollunterzeichners",
+        "Telefon": "Telefonnummer des Unterzeichners",
+        "Vorname": "Vorname des Protokollunterzeichners"
+    },
+    "schedule": {
+        "approved": "Genehmigungsstatus",
+        "end_date": "Ende der geplanten Schicht",
+        "id": "Planungs-ID",
+        "standby": "Bereitschaftsstatus",
+        "start_date": "Beginn der geplanten Schicht",
+        "user_id": "Zugeordneter Benutzer"
+    },
+    "sesonStatistic": {
+        "date": "Datum des Tickets",
+        "duration1": "Dauer des ersten Besuchs",
+        "duration2": "Dauer des zweiten Besuchs",
+        "end1": "Ende der ersten Besuchszeit",
+        "end2": "Ende der zweiten Besuchszeit",
+        "start1": "Beginn der ersten Besuchszeit",
+        "start2": "Beginn der zweiten Besuchszeit",
+        "ticketNumber": "Ticketnummer oder Belegreferenz"
+    },
+    "Transaktionen": {
+        "beguenstigter_zahlungspflichtiger": "Empfänger oder Zahler der Transaktion",
+        "betrag": "Betrag der Transaktion",
+        "buchungstag": "Datum der Buchung",
+        "buchungstext": "Titel oder Bezeichnung der Buchung",
+        "erstellungsdatum": "Zeitpunkt der Erfassung der Transaktion",
+        "kategorie": "Oberkategorie der Buchung (z. B. Strom, Eintritt)",
+        "kontonummer_iban": "IBAN des Kontos",
+        "subkategorie": "Feinere Unterkategorie der Buchung",
+        "transaktion_id": "Eindeutige ID der Transaktion",
+        "verwendungszweck": "Beschreibung des Zahlungszwecks",
+        "waehrung": "Währung der Transaktion (z. B. EUR)"
+    },
+    "user": {
+        "created": "Registrierdatum",
+        "firstname": "Vorname",
+        "id": "Benutzer-ID",
+        "lastlogin": "Zeitpunkt der letzten Anmeldung",
+        "password": "Passworthash",
+        "surname": "Nachname",
+        "type": "Benutzertyp oder Rolle",
+        "username": "Benutzername"
+    },
+    "Wasserqualitaet": {
+        "Becken": "Kennung des gemessenen Beckens (z. B. SB für Schwimmerbecken)",
+        "Cl_frei": "Freier Chlorgehalt in mg\/l",
+        "Cl_gesamt": "Gesamter Chlorgehalt in mg\/l",
+        "Datum": "Datum der Wasserqualitätsmessung",
+        "id": "Eindeutige interne ID der Messung",
+        "pH_Wert": "pH-Wert des Wassers",
+        "Redox_Wert": "Redoxpotenzial in mV (Maß für Desinfektionskraft)",
+        "Uhrzeit": "Zeitpunkt der Messung",
+        "Wasserhaerte": "Härtegrad des Wassers in °dH"
+    }
+}

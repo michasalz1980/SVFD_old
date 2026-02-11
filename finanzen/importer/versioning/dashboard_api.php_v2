@@ -1,0 +1,330 @@
+<?php
+/**
+ * Dashboard API für SV Freibad Web-Interface
+ * Liefert Daten als JSON für das Web-Dashboard
+ * ERWEITERT mit Jahresfilter-Funktionalität
+ */
+
+header('Content-Type: application/json; charset=utf-8');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET');
+header('Access-Control-Allow-Headers: Content-Type');
+
+require_once 'config.php';
+
+try {
+    $pdo = new PDO(
+        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET,
+        DB_USER,
+        DB_PASS,
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
+    
+    $action = $_GET['action'] ?? 'all';
+    $year = $_GET['year'] ?? null; // Jahr-Filter hinzufügen
+    $response = ['status' => 'success', 'data' => []];
+    
+    switch ($action) {
+        case 'stats':
+            $response['data'] = getBasicStats($pdo, $year);
+            break;
+            
+        case 'daily_revenue':
+            $response['data'] = getDailyRevenue($pdo, $year);
+            break;
+            
+        case 'payment_methods':
+            $response['data'] = getPaymentMethods($pdo, $year);
+            break;
+            
+        case 'top_products':
+            $response['data'] = getTopProducts($pdo, $year);
+            break;
+            
+        case 'bon_analysis':
+            $response['data'] = getBonAnalysis($pdo, $year);
+            break;
+            
+        case 'import_status':
+            $response['data'] = getImportStatus($pdo);
+            break;
+            
+        case 'available_years':
+            $response['data'] = getAvailableYears($pdo);
+            break;
+            
+        case 'all':
+        default:
+            $response['data'] = [
+                'stats' => getBasicStats($pdo, $year),
+                'daily_revenue' => getDailyRevenue($pdo, $year),
+                'payment_methods' => getPaymentMethods($pdo, $year),
+                'top_products' => getTopProducts($pdo, $year),
+                'bon_analysis' => getBonAnalysis($pdo, $year),
+                'import_status' => getImportStatus($pdo),
+                'available_years' => getAvailableYears($pdo)
+            ];
+            break;
+    }
+    
+    echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode([
+        'status' => 'error',
+        'message' => $e->getMessage()
+    ], JSON_UNESCAPED_UNICODE);
+}
+
+function getBasicStats($pdo, $year = null) {
+    // WHERE-Klausel für Jahr-Filter
+    $whereClause = $year ? "WHERE YEAR(transaction_date) = " . intval($year) : "";
+    
+    // Grundlegende Statistiken
+    $stats = [];
+    
+    // Gesamtanzahl Transaktionen
+    $stmt = $pdo->query("SELECT COUNT(*) FROM pos_sales $whereClause");
+    $stats['total_transactions'] = (int)$stmt->fetchColumn();
+    
+    // Gesamtumsatz
+    $stmt = $pdo->query("SELECT COALESCE(SUM(price * quantity), 0) FROM pos_sales $whereClause");
+    $stats['total_revenue'] = (float)$stmt->fetchColumn();
+    
+    // Anzahl Bons
+    $stmt = $pdo->query("SELECT COUNT(DISTINCT CONCAT(receipt_number, '-', transaction_date)) FROM pos_sales $whereClause");
+    $stats['total_bons'] = (int)$stmt->fetchColumn();
+    
+    // Durchschnittlicher Bon-Wert
+    $stats['avg_bon_value'] = $stats['total_bons'] > 0 ? $stats['total_revenue'] / $stats['total_bons'] : 0;
+    
+    // Zeitraum
+    $stmt = $pdo->query("SELECT MIN(transaction_date) as oldest, MAX(transaction_date) as newest FROM pos_sales $whereClause");
+    $timespan = $stmt->fetch();
+    $stats['date_range'] = [
+        'oldest' => $timespan['oldest'],
+        'newest' => $timespan['newest']
+    ];
+    
+    // Durchschnittliche Artikel pro Bon
+    $stmt = $pdo->query("
+        SELECT COALESCE(AVG(item_count), 0) as avg_items
+        FROM (
+            SELECT COUNT(*) as item_count
+            FROM pos_sales 
+            $whereClause
+            GROUP BY receipt_number, transaction_date
+        ) as bon_counts
+    ");
+    $stats['avg_items_per_bon'] = (float)$stmt->fetchColumn();
+    
+    // Jahr-Info hinzufügen
+    $stats['filtered_year'] = $year;
+    
+    return $stats;
+}
+
+function getDailyRevenue($pdo, $year = null) {
+    // WHERE-Klausel für Jahr-Filter
+    if ($year) {
+        $whereClause = "WHERE YEAR(transaction_date) = " . intval($year);
+        $limitDays = 365; // Ganzes Jahr anzeigen
+        $orderLimit = "ORDER BY sale_date ASC"; // Chronologisch für Jahresansicht
+    } else {
+        $whereClause = "WHERE transaction_date >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)";
+        $limitDays = 14; // Nur letzte 14 Tage
+        $orderLimit = "ORDER BY sale_date DESC LIMIT 14";
+    }
+    
+    $stmt = $pdo->query("
+        SELECT DATE(transaction_date) as sale_date,
+               COUNT(DISTINCT CONCAT(receipt_number, '-', transaction_date)) as bon_count,
+               COUNT(*) as item_count,
+               SUM(price * quantity) as daily_revenue
+        FROM pos_sales 
+        $whereClause
+        GROUP BY DATE(transaction_date)
+        $orderLimit
+    ");
+    
+    $daily_data = [];
+    while ($row = $stmt->fetch()) {
+        $daily_data[] = [
+            'date' => $row['sale_date'],
+            'revenue' => (float)$row['daily_revenue'],
+            'bons' => (int)$row['bon_count'],
+            'items' => (int)$row['item_count']
+        ];
+    }
+    
+    // Für "Alle Jahre" (letzte 14 Tage) umkehren, für Jahresansicht chronologisch lassen
+    return $year ? $daily_data : array_reverse($daily_data);
+}
+
+function getPaymentMethods($pdo, $year = null) {
+    // WHERE-Klausel für Jahr-Filter
+    $whereClause = $year ? "WHERE YEAR(transaction_date) = " . intval($year) : "";
+    
+    $stmt = $pdo->query("
+        SELECT payment_method, 
+               COUNT(*) as transaction_count,
+               SUM(price * quantity) as total_revenue
+        FROM pos_sales 
+        $whereClause
+        GROUP BY payment_method 
+        ORDER BY total_revenue DESC
+    ");
+    
+    $payment_data = [];
+    $total_revenue = 0;
+    
+    // Erst Gesamtumsatz berechnen
+    while ($row = $stmt->fetch()) {
+        $total_revenue += $row['total_revenue'];
+        $payment_data[] = $row;
+    }
+    
+    // Prozentsätze hinzufügen
+    foreach ($payment_data as &$payment) {
+        $payment['revenue'] = (float)$payment['total_revenue'];
+        $payment['percentage'] = $total_revenue > 0 ? ($payment['total_revenue'] / $total_revenue) * 100 : 0;
+        $payment['transaction_count'] = (int)$payment['transaction_count'];
+        unset($payment['total_revenue']);
+    }
+    
+    return $payment_data;
+}
+
+function getTopProducts($pdo, $year = null) {
+    // WHERE-Klausel für Jahr-Filter
+    $whereClause = $year ? "WHERE YEAR(transaction_date) = " . intval($year) : "";
+    
+    $stmt = $pdo->query("
+        SELECT product_description, 
+               SUM(quantity) as total_quantity,
+               SUM(price * quantity) as total_revenue,
+               COUNT(*) as transaction_count
+        FROM pos_sales 
+        $whereClause
+        GROUP BY product_description 
+        ORDER BY total_revenue DESC 
+        LIMIT 15
+    ");
+    
+    $products = [];
+    $total_revenue = 0;
+    
+    // Gesamtumsatz berechnen
+    $total_stmt = $pdo->query("SELECT COALESCE(SUM(price * quantity), 0) FROM pos_sales $whereClause");
+    $total_revenue = $total_stmt->fetchColumn();
+    
+    $rank = 1;
+    while ($row = $stmt->fetch()) {
+        $products[] = [
+            'rank' => $rank++,
+            'name' => $row['product_description'],
+            'quantity' => (int)$row['total_quantity'],
+            'revenue' => (float)$row['total_revenue'],
+            'transaction_count' => (int)$row['transaction_count'],
+            'percentage' => $total_revenue > 0 ? ($row['total_revenue'] / $total_revenue) * 100 : 0
+        ];
+    }
+    
+    return $products;
+}
+
+function getBonAnalysis($pdo, $year = null) {
+    // WHERE-Klausel für Jahr-Filter
+    $whereClause = $year ? "WHERE YEAR(transaction_date) = " . intval($year) : "";
+    
+    $stmt = $pdo->query("
+        SELECT 
+            COUNT(CASE WHEN item_count = 1 THEN 1 END) as single_item_bons,
+            COUNT(CASE WHEN item_count > 1 THEN 1 END) as multi_item_bons,
+            COALESCE(AVG(item_count), 0) as avg_items_per_bon,
+            COALESCE(MAX(item_count), 0) as max_items_per_bon,
+            COUNT(*) as total_bons
+        FROM (
+            SELECT COUNT(*) as item_count
+            FROM pos_sales 
+            $whereClause
+            GROUP BY receipt_number, transaction_date
+        ) as bon_counts
+    ");
+    
+    $analysis = $stmt->fetch();
+    
+    return [
+        'single_item_bons' => (int)$analysis['single_item_bons'],
+        'multi_item_bons' => (int)$analysis['multi_item_bons'],
+        'avg_items_per_bon' => (float)$analysis['avg_items_per_bon'],
+        'max_items_per_bon' => (int)$analysis['max_items_per_bon'],
+        'total_bons' => (int)$analysis['total_bons'],
+        'multi_item_percentage' => $analysis['total_bons'] > 0 ? 
+            ($analysis['multi_item_bons'] / $analysis['total_bons']) * 100 : 0
+    ];
+}
+
+function getAvailableYears($pdo) {
+    $stmt = $pdo->query("
+        SELECT DISTINCT YEAR(transaction_date) as year,
+               COUNT(*) as transaction_count,
+               SUM(price * quantity) as year_revenue
+        FROM pos_sales 
+        GROUP BY YEAR(transaction_date)
+        ORDER BY year DESC
+    ");
+    
+    $years = [];
+    while ($row = $stmt->fetch()) {
+        $years[] = [
+            'year' => (int)$row['year'],
+            'transaction_count' => (int)$row['transaction_count'],
+            'revenue' => (float)$row['year_revenue']
+        ];
+    }
+    
+    return $years;
+}
+
+function getImportStatus($pdo) {
+    $stmt = $pdo->query("
+        SELECT filename, import_date, total_rows, imported_rows, status, error_rows
+        FROM pos_import_log 
+        ORDER BY import_date DESC 
+        LIMIT 5
+    ");
+    
+    $imports = [];
+    while ($row = $stmt->fetch()) {
+        $success_rate = $row['total_rows'] > 0 ? 
+            ($row['imported_rows'] / $row['total_rows']) * 100 : 0;
+            
+        $imports[] = [
+            'filename' => $row['filename'],
+            'import_date' => $row['import_date'],
+            'total_rows' => (int)$row['total_rows'],
+            'imported_rows' => (int)$row['imported_rows'],
+            'error_rows' => (int)($row['error_rows'] ?? 0),
+            'status' => $row['status'],
+            'success_rate' => $success_rate
+        ];
+    }
+    
+    return $imports;
+}
+
+// Hilfsfunktion für Debugging
+function debugQuery($pdo, $query) {
+    if (isset($_GET['debug']) && $_GET['debug'] === '1') {
+        echo "<!-- Debug Query: $query -->\n";
+        try {
+            $stmt = $pdo->query("EXPLAIN $query");
+            echo "<!-- Explain: " . print_r($stmt->fetchAll(), true) . " -->\n";
+        } catch (Exception $e) {
+            echo "<!-- Debug Error: " . $e->getMessage() . " -->\n";
+        }
+    }
+}
+?>

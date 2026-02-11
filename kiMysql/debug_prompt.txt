@@ -1,0 +1,3 @@
+SELECT SUM(total_cost) AS Total_Stromzukaeufe
+FROM ffd_Stromrechnungen
+WHERE YEAR(start_date) = YEAR(CURDATE());

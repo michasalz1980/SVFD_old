@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freibad Dabringhausen - Monitoring System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/4.1.0/cdn.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        /* Tab-Navigation Styles */
+        .tab-navigation {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .tab-btn {
+            padding: 0.75rem 2rem;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .tab-btn:hover:not(.active) {
+            background: #f8f9fa;
+            border-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Frischwasser-spezifische Styles */
+        .frischwasser-status .status-item:nth-child(1) .status-value {
+            color: #3498db; /* Zählerstand - Blau */
+        }
+        
+        .frischwasser-status .status-item:nth-child(2) .status-value {
+            color: #e74c3c; /* Stunden-Verbrauch - Rot */
+        }
+        
+        .frischwasser-status .status-item:nth-child(3) .status-value {
+            color: #27ae60; /* Tages-Verbrauch - Grün */
+        }
+        
+        .frischwasser-status .status-item:nth-child(4) .status-value {
+            color: #f39c12; /* Aktueller Durchfluss - Orange */
+        }
+        
+        .frischwasser-status .status-item:nth-child(5) .status-value {
+            color: #9b59b6; /* Wochen-Verbrauch - Lila */
+        }
+        
+        .comparison-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .comparison-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+        
+        .comparison-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comparison-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏊‍♂️ Freibad Dabringhausen</h1>
+        <div class="subtitle">Wasser-Monitoring System <span id="version-info" class="version-badge">v1.3.0</span></div>
+    </div>
+
+    <div class="container">
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" onclick="switchTab('abwasser')">
+                💧 Abwasser
+            </button>
+            <button class="tab-btn" onclick="switchTab('frischwasser')">
+                🚿 Frischwasser
+            </button>
+            <button class="tab-btn" onclick="switchTab('overview')">
+                📊 Übersicht
+            </button>
+        </div>
+
+        <!-- ABWASSER TAB (Bestehend) -->
+        <div id="abwasser-tab" class="tab-content active">
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="status-label">Wasserstand</div>
+                    <div class="status-value" id="current-wasserstand">--<span class="status-unit">cm</span></div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Durchfluss</div>
+                    <div class="status-value" id="current-durchfluss">--<span class="status-unit">l/s</span></div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Zählerstand</div>
+                    <div class="status-value" id="current-totalizer">--<span class="status-unit">m³</span></div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Gesamtverbrauch</div>
+                    <div class="status-value" id="current-total-consumption">--<span class="status-unit">m³</span></div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Sensor</div>
+                    <div class="status-value" id="current-sensor">--<span class="status-unit">mA</span></div>
+                </div>
+                <div class="last-update" id="last-update">
+                    Letzte Aktualisierung: --
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="time-selector">
+                    <span style="margin-right: 1rem; color: #666;">Zeitraum:</span>
+                    <button class="time-btn active" onclick="changeTimeRange('1h')">1 Stunde</button>
+                    <button class="time-btn" onclick="changeTimeRange('6h')">6 Stunden</button>
+                    <button class="time-btn" onclick="changeTimeRange('24h')">24 Stunden</button>
+                    <button class="time-btn" onclick="changeTimeRange('7d')">7 Tage</button>
+                    <button class="time-btn" onclick="changeTimeRange('30d')">1 Monat</button>
+                    <button class="time-btn" onclick="changeTimeRange('1y')">1 Jahr</button>
+                </div>
+                <div class="control-buttons">
+                    <button class="info-btn" onclick="toggleSystemInfo()" title="System-Informationen">
+                        📊 Info
+                    </button>
+                    <button class="refresh-btn" onclick="refreshData()">🔄 Aktualisieren</button>
+                </div>
+            </div>
+
+            <div id="alerts"></div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">💧 Wasserstand Verlauf</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="wasserstanChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">🌊 Durchflussrate</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="durchflussChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">📊 Zählerstand & Verbrauch</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="totalizerChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">⚡ Sensor Strom</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="sensorChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FRISCHWASSER TAB (Neu) -->
+        <div id="frischwasser-tab" class="tab-content">
+            <div class="status-bar frischwasser-status">
+                <div class="status-item">
+                    <div class="status-label">Zählerstand</div>
+                    <div class="status-value" id="fw-current-counter">--<span class="status-unit">m³</span></div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Stunden-Verbrauch</div>
+                    <div class="status-value" id="fw-current-hourly">--<span class="status-unit">L</span></div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Tages-Verbrauch</div>
+                    <div class="status-value" id="fw-current-daily">--<span class="status-unit">m³</span></div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Aktueller Durchfluss</div>
+                    <div class="status-value" id="fw-current-flow">--<span class="status-unit">l/min</span></div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Wochen-Verbrauch</div>
+                    <div class="status-value" id="fw-current-weekly">--<span class="status-unit">m³</span></div>
+                </div>
+                <div class="last-update" id="fw-last-update">
+                    Letzte Aktualisierung: --
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="time-selector">
+                    <span style="margin-right: 1rem; color: #666;">Zeitraum:</span>
+                    <button class="time-btn active" onclick="changeFWTimeRange('1h')">1 Stunde</button>
+                    <button class="time-btn" onclick="changeFWTimeRange('6h')">6 Stunden</button>
+                    <button class="time-btn" onclick="changeFWTimeRange('24h')">24 Stunden</button>
+                    <button class="time-btn" onclick="changeFWTimeRange('7d')">7 Tage</button>
+                    <button class="time-btn" onclick="changeFWTimeRange('30d')">1 Monat</button>
+                </div>
+                <div class="control-buttons">
+                    <button class="refresh-btn" onclick="refreshFWData()">🔄 Aktualisieren</button>
+                </div>
+            </div>
+
+            <div id="fw-alerts"></div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">🚿 Verbrauchsverlauf</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="fwConsumptionChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">📈 Zählerstand</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="fwCounterChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">📊 Tagesverbrauch</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="fwDailyChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">⏰ Verbrauchsmuster</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="fwPatternChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ÜBERSICHT TAB (Vergleich) -->
+        <div id="overview-tab" class="tab-content">
+            <div class="comparison-panel">
+                <h3 style="text-align: center; margin-bottom: 1.5rem;">🔄 Wasser-Bilanz Übersicht</h3>
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <div class="comparison-label">Frischwasser Zufluss (heute)</div>
+                        <div class="comparison-value" id="overview-fresh-daily">-- m³</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Abwasser Abfluss (heute)</div>
+                        <div class="comparison-value" id="overview-waste-daily">-- m³</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Wasser-Bilanz</div>
+                        <div class="comparison-value" id="overview-balance">-- m³</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Effizienz</div>
+                        <div class="comparison-value" id="overview-efficiency">-- %</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">⚖️ Wasser-Bilanz Verlauf</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="overviewBalanceChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">📊 Verbrauch Vergleich</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="overviewComparisonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System-Informationen Panel -->
+        <div id="systemInfoPanel" class="system-info-panel" style="display: none;">
+            <div class="system-info-header">
+                <h3>📊 System-Informationen</h3>
+                <button class="close-btn" onclick="toggleSystemInfo()">✖️</button>
+            </div>
+            <div class="system-info-content">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Version</div>
+                        <div class="info-value" id="system-version">v1.3.0</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Erstes Messdatum</div>
+                        <div class="info-value" id="first-measurement">--</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">System läuft seit</div>
+                        <div class="info-value" id="system-uptime">--</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Letzte Aktualisierung</div>
+                        <div class="info-value" id="last-api-call">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab-Switching Funktionalität
+        function switchTab(tabName) {
+            // Alle Tabs ausblenden
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Alle Tab-Buttons deaktivieren
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Gewählten Tab anzeigen
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+            
+            // Daten für den gewählten Tab laden
+            if (tabName === 'frischwasser') {
+                loadFrischwasserData();
+            } else if (tabName === 'overview') {
+                loadOverviewData();
+            } else if (tabName === 'abwasser') {
+                loadData(); // Bestehende Funktion
+            }
+        }
+
+        // Frischwasser Daten laden (Mock-Funktion)
+        async function loadFrischwasserData() {
+            try {
+                // Hier würde die echte API-Abfrage stehen
+                const response = await fetch('api_frischwasser.php?range=1h');
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                updateFrischwasserValues(data.current);
+                updateFrischwasserCharts(data.history);
+                updateFrischwasserLastUpdate(data.last_update);
+
+            } catch (error) {
+                console.error('Fehler beim Laden der Frischwasser-Daten:', error);
+                // Mock-Daten für Demo
+                updateFrischwasserValuesMock();
+            }
+        }
+
+        // Mock-Daten für Demonstration
+        function updateFrischwasserValuesMock() {
+            document.getElementById('fw-current-counter').innerHTML = 
+                `1,236.150<span class="status-unit">m³</span>`;
+            document.getElementById('fw-current-hourly').innerHTML = 
+                `340<span class="status-unit">L</span>`;
+            document.getElementById('fw-current-daily').innerHTML = 
+                `2.85<span class="status-unit">m³</span>`;
+            document.getElementById('fw-current-flow').innerHTML = 
+                `12.5<span class="status-unit">l/min</span>`;
+            document.getElementById('fw-current-weekly').innerHTML = 
+                `18.6<span class="status-unit">m³</span>`;
+            
+            document.getElementById('fw-last-update').textContent = 
+                'Letzte Messung: ' + new Date().toLocaleString('de-DE');
+        }
+
+        // Frischwasser Charts (Mock)
+        function updateFrischwasserCharts(history) {
+            // Hier würden die echten Charts initialisiert
+            console.log('Frischwasser Charts würden hier aktualisiert');
+        }
+
+        // Übersicht laden (Mock)
+        function loadOverviewData() {
+            document.getElementById('overview-fresh-daily').textContent = '2.85 m³';
+            document.getElementById('overview-waste-daily').textContent = '2.12 m³';
+            document.getElementById('overview-balance').textContent = '0.73 m³';
+            document.getElementById('overview-efficiency').textContent = '74.4%';
+        }
+
+        // Frischwasser Zeitraum ändern
+        function changeFWTimeRange(range) {
+            // Buttons aktualisieren
+            document.querySelectorAll('#frischwasser-tab .time-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            loadFrischwasserData();
+        }
+
+        // Frischwasser Daten aktualisieren
+        function refreshFWData() {
+            loadFrischwasserData();
+        }
+
+        // Beim Laden der Seite
+        document.addEventListener('DOMContentLoaded', function() {
+            // Bestehende Initialisierung
+            // initCharts();
+            // loadData();
+            
+            // Mock-Daten für Demo laden
+            updateFrischwasserValuesMock();
+            loadOverviewData();
+        });
+    </script>
+</body>
+</html>

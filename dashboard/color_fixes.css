@@ -1,0 +1,289 @@
+/* =============================================================================
+   FARBKORREKTUREN FÜR BESSERE LESBARKEIT
+   Diese Regeln zu styles.css oder styles_extended.css hinzufügen
+   ============================================================================= */
+
+/* =============================================================================
+   FRISCHWASSER STATUS-BAR SCHRIFTFARBEN KORRIGIERT
+   ============================================================================= */
+
+.frischwasser-status {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+    border: 2px solid rgba(52, 152, 219, 0.2);
+}
+
+/* Alle Status-Werte: Dunkle Farben für bessere Lesbarkeit auf hellem Hintergrund */
+.frischwasser-status .status-value {
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.frischwasser-status .status-item:nth-child(1) .status-value {
+    color: #2c3e50; /* Zählerstand - Dunkelblau */
+    text-shadow: 0 1px 2px rgba(44, 62, 80, 0.2);
+}
+
+.frischwasser-status .status-item:nth-child(2) .status-value {
+    color: #c0392b; /* Stunden-Verbrauch - Dunkelrot */
+    text-shadow: 0 1px 2px rgba(192, 57, 43, 0.2);
+}
+
+.frischwasser-status .status-item:nth-child(3) .status-value {
+    color: #27ae60; /* Tages-Verbrauch - Dunkelgrün */
+    text-shadow: 0 1px 2px rgba(39, 174, 96, 0.2);
+    font-weight: 800;
+}
+
+.frischwasser-status .status-item:nth-child(4) .status-value {
+    color: #d68910; /* Durchfluss - Dunkles Orange */
+    text-shadow: 0 1px 2px rgba(214, 137, 16, 0.2);
+}
+
+.frischwasser-status .status-item:nth-child(5) .status-value {
+    color: #8e44ad; /* Wochen-Verbrauch - Dunkles Lila */
+    text-shadow: 0 1px 2px rgba(142, 68, 173, 0.2);
+}
+
+/* =============================================================================
+   ABWASSER STATUS-BAR AUCH KORRIGIEREN
+   ============================================================================= */
+
+/* Abwasser Status-Bar Hintergrund aufhellen für besseren Kontrast */
+.status-bar:not(.frischwasser-status) {
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(52, 152, 219, 0.1);
+}
+
+/* Abwasser Status-Werte: Dunkle Farben */
+.status-bar:not(.frischwasser-status) .status-value {
+    color: #2c3e50;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Gesamtverbrauch hervorheben */
+.status-bar:not(.frischwasser-status) .status-item:nth-child(4) .status-value {
+    color: #27ae60;
+    font-weight: 700;
+}
+
+/* =============================================================================
+   ÜBERSICHT/VERGLEICH STATUS-WERTE KORRIGIEREN
+   ============================================================================= */
+
+/* Vergleichswerte mit besseren Farben */
+.comparison-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-item:nth-child(1) .comparison-value {
+    color: #2980b9; /* Frischwasser - Kräftiges Blau */
+}
+
+.comparison-item:nth-child(2) .comparison-value {
+    color: #d35400; /* Abwasser - Kräftiges Orange */
+}
+
+.comparison-item:nth-child(3) .comparison-value {
+    color: #27ae60; /* Positive Bilanz - Grün */
+}
+
+.comparison-item:nth-child(3) .comparison-value.negative {
+    color: #c0392b; /* Negative Bilanz - Rot */
+}
+
+.comparison-item:nth-child(4) .comparison-value {
+    color: #8e44ad; /* Effizienz - Lila */
+}
+
+/* Effizienz-spezifische Farben */
+.comparison-item:nth-child(4) .comparison-value.excellent {
+    color: #27ae60; /* > 90% - Grün */
+}
+
+.comparison-item:nth-child(4) .comparison-value.good {
+    color: #f39c12; /* 70-90% - Orange */
+}
+
+.comparison-item:nth-child(4) .comparison-value.poor {
+    color: #c0392b; /* < 70% - Rot */
+}
+
+/* =============================================================================
+   STATUS-LABELS AUCH VERBESSERN
+   ============================================================================= */
+
+.status-label {
+    font-size: 0.85rem;
+    color: #5d6d7e;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.comparison-label {
+    font-size: 0.8rem;
+    color: #5d6d7e;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+/* =============================================================================
+   LETZTE AKTUALISIERUNG VERBESSERN
+   ============================================================================= */
+
+.last-update {
+    background: rgba(39, 174, 96, 0.1);
+    color: #1e8449;
+    border: 1px solid rgba(39, 174, 96, 0.3);
+    font-weight: 600;
+}
+
+.last-update.attention {
+    background: rgba(243, 156, 18, 0.1);
+    color: #b7950b;
+    border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+.last-update.warning {
+    background: rgba(231, 76, 60, 0.1);
+    color: #c0392b;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.last-update.error {
+    background: rgba(231, 76, 60, 0.15);
+    color: #a93226;
+    border: 1px solid rgba(231, 76, 60, 0.4);
+    font-weight: 700;
+}
+
+/* =============================================================================
+   ALERT-NACHRICHTEN VERBESSERN
+   ============================================================================= */
+
+.alert {
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-weight: 500;
+    border-width: 2px;
+    border-style: solid;
+}
+
+.alert.warning {
+    background: rgba(243, 156, 18, 0.1);
+    border-color: rgba(243, 156, 18, 0.4);
+    color: #b7950b;
+}
+
+.alert.danger {
+    background: rgba(231, 76, 60, 0.1);
+    border-color: rgba(231, 76, 60, 0.4);
+    color: #a93226;
+}
+
+.alert.success {
+    background: rgba(39, 174, 96, 0.1);
+    border-color: rgba(39, 174, 96, 0.4);
+    color: #1e8449;
+}
+
+.alert.info {
+    background: rgba(52, 152, 219, 0.1);
+    border-color: rgba(52, 152, 219, 0.4);
+    color: #2471a3;
+}
+
+.error {
+    background: rgba(231, 76, 60, 0.1);
+    border: 2px solid rgba(231, 76, 60, 0.4);
+    color: #a93226;
+    font-weight: 600;
+}
+
+/* =============================================================================
+   HOVER-EFFEKTE FÜR BESSERE INTERAKTIVITÄT
+   ============================================================================= */
+
+.status-item:hover .status-value {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+    transition: all 0.2s ease;
+}
+
+.comparison-item:hover .comparison-value {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+    transition: all 0.2s ease;
+}
+
+/* =============================================================================
+   MOBILE RESPONSIVENESS FÜR FARBEN
+   ============================================================================= */
+
+@media (max-width: 768px) {
+    .status-value {
+        font-size: 1.3rem;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+    
+    .comparison-value {
+        font-size: 1.3rem;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+    
+    .status-label,
+    .comparison-label {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .status-value {
+        font-size: 1.1rem;
+    }
+    
+    .comparison-value {
+        font-size: 1.1rem;
+    }
+    
+    .status-label,
+    .comparison-label {
+        font-size: 0.7rem;
+    }
+}
+
+/* =============================================================================
+   DARK MODE SUPPORT (FALLS AKTIVIERT)
+   ============================================================================= */
+
+@media (prefers-color-scheme: dark) {
+    .frischwasser-status,
+    .status-bar:not(.frischwasser-status) {
+        background: rgba(0, 0, 0, 0.8);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .status-value,
+    .comparison-value {
+        color: #ecf0f1;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    
+    .status-label,
+    .comparison-label {
+        color: #bdc3c7;
+    }
+    
+    .last-update {
+        background: rgba(39, 174, 96, 0.2);
+        color: #58d68d;
+        border-color: rgba(39, 174, 96, 0.4);
+    }
+}

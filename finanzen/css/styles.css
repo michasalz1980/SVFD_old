@@ -1,0 +1,77 @@
+/* styles.css */
+.currency {
+    text-align: right;
+}
+
+.highlight {
+    font-weight: bold;
+    background-color: #f8f9fa; /* Leichtes Grau für Hintergrund */
+}
+
+.navbar-brand img {
+    max-height: 50px; /* Größe des Logos anpassen */
+    margin-right: 10px; /* Platz zwischen Logo und Text */
+}
+
+.negative {
+    color: red;
+}
+
+.kpi-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.kpi-box {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    flex: 1;
+    text-align: center;
+}
+
+.kpi-box p {
+    margin: 0;
+}
+
+.table-sm td {
+    padding: .3rem;
+}
+
+.collapse-table td {
+    padding: .75rem;
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+.table-bordered td, .table-bordered th {
+    border: 1px solid #dee2e6;
+}
+
+.table-collapse {
+    border-collapse: collapse;
+}
+
+.table-collapse tr {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.collapse-table {
+    margin-bottom: 0;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table-sm .collapse-table {
+    margin-bottom: 0;
+    border-top: none;
+}
+
+.collapse-table tr:last-child {
+    border-bottom: none;
+}

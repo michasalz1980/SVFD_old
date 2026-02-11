@@ -1,0 +1,17 @@
+# Requirements für Abwasser Modbus Reader
+# Installation: pip install -r requirements.txt
+
+# Modbus TCP Client
+pymodbus>=3.5.0
+
+# MySQL Database Connector
+PyMySQL>=1.1.0
+
+# Configuration Parser (standardmäßig in Python enthalten, aber für Klarheit)
+configparser>=5.3.0
+
+# Optional: Für erweiterte Logging Features
+colorlog>=6.7.0
+
+# Optional: Für systemweite Cronjob Monitoring
+psutil>=5.9.0

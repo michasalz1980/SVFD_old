@@ -1,0 +1,175 @@
+# .htaccess für Freibad Dabringhausen
+# Optimiert für Apache/PHP 8.2/HTTPS-Umgebung
+
+# ===================================
+# SICHERHEITS-GRUNDKONFIGURATION
+# ===================================
+
+# Verhindere Directory Browsing
+Options -Indexes
+
+# Server-Signatur verstecken
+ServerSignature Off
+
+# Sensible Dateien schützen
+<FilesMatch "\.(conf|config|auth|users|log|json|bak|backup)$">
+    Require all denied
+</FilesMatch>
+
+# PHP-Backup-Dateien schützen
+<FilesMatch "\.php\.(bak|backup|old|orig|save)$">
+    Require all denied
+</FilesMatch>
+
+# ===================================
+# SESSION-SICHERHEIT (PHP 8.2 optimiert)
+# ===================================
+
+<IfModule mod_php.c>
+    # Session-Sicherheit für HTTPS
+    php_value session.cookie_httponly 1
+    php_value session.cookie_secure 1
+    php_value session.use_only_cookies 1
+    php_value session.cookie_samesite "Strict"
+    php_value session.gc_maxlifetime 28800
+    
+    # Zusätzliche Sicherheit
+    php_value expose_php Off
+    php_value log_errors On
+    php_value display_errors Off
+    
+    # Upload-Sicherheit
+    php_value upload_max_filesize 5M
+    php_value post_max_size 10M
+    php_value max_execution_time 30
+</IfModule>
+
+# ===================================
+# SECURITY HEADERS
+# ===================================
+
+<IfModule mod_headers.c>
+    # XSS-Schutz
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # HTTPS-Enforcement (für Ihre Domain)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    
+    # Content Security Policy (angepasst für Freibad)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ===================================
+# URL-REWRITING FÜR FREIBAD-SYSTEM
+# ===================================
+
+RewriteEngine On
+
+# HTTPS-Weiterleitung (falls noch nicht erzwungen)
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Statische Dateien direkt ausliefern
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_URI} \.(css|js|png|jpg|jpeg|gif|ico|svg|pdf|zip|doc|docx)$ [NC]
+RewriteRule ^ - [L]
+
+# Spezielle Freibad-Routen
+RewriteRule ^login/?$ login.php [L]
+RewriteRule ^logout/?$ login.php?logout=1 [L,QSA]
+RewriteRule ^dashboard/?$ dashboard.php [L]
+RewriteRule ^admin/?$ admin.php [L]
+
+# Bereichs-spezifische Routen
+RewriteRule ^(public|mitglieder|schwimmkurse|rettungsdienst|veranstaltungen|technik|wartung|finanzen|vorstand|admin)/(.*)$ index.php?area=$1&path=$2 [L,QSA]
+RewriteRule ^(public|mitglieder|schwimmkurse|rettungsdienst|veranstaltungen|technik|wartung|finanzen|vorstand|admin)/?$ index.php?area=$1 [L,QSA]
+
+# API-Routen (für zukünftige Erweiterungen)
+RewriteRule ^api/(.*)$ api.php?endpoint=$1 [L,QSA]
+
+# Alle anderen Anfragen zur Authentifizierung
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/(login\.php|logout\.php|dashboard\.php|admin\.php|index\.php)
+RewriteRule ^(.*)$ index.php?path=$1 [L,QSA]
+
+# ===================================
+# CACHE-KONTROLLE
+# ===================================
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Statische Assets cachen
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    
+    # HTML/PHP nicht cachen
+    ExpiresByType text/html "access plus 0 seconds"
+    ExpiresByType application/x-httpd-php "access plus 0 seconds"
+</IfModule>
+
+# Cache-Control für dynamische Inhalte
+<FilesMatch "\.(php|html)$">
+    <IfModule mod_headers.c>
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires 0
+    </IfModule>
+</FilesMatch>
+
+# ===================================
+# KOMPRIMIERUNG
+# ===================================
+
+<IfModule mod_deflate.c>
+    # Text-basierte Dateien komprimieren
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# ===================================
+# FEHLERMELDUNGEN
+# ===================================
+
+# Custom Error Pages (optional)
+# ErrorDocument 404 /404.php
+# ErrorDocument 403 /403.php
+# ErrorDocument 500 /500.php
+
+# ===================================
+# ENTWICKLUNG vs. PRODUKTION
+# ===================================
+
+# Für Entwicklung: Detaillierte Fehler
+# SetEnv ENVIRONMENT development
+
+# Für Produktion: Keine Fehlerausgabe
+SetEnv ENVIRONMENT production
+
+<IfModule mod_rewrite.c>
+    # Entwicklungs-spezifische Regeln
+    RewriteCond %{ENV:ENVIRONMENT} ^development$
+    RewriteRule ^debug/?$ debug.php [L]
+    
+    # Test-Routen nur in Entwicklung
+    RewriteCond %{ENV:ENVIRONMENT} ^development$
+    RewriteRule ^test/?$ test_htaccess.php [L]
+</IfModule>

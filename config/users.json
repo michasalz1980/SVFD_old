@@ -1,0 +1,42 @@
+{
+    "admin": {
+        "password": "$2y$10$CbuNCwBPsFlpJaiDLgHAG.Kc\/HfaXriqZnLVkVjN9hAoSmWjiAEtm",
+        "role": "admin",
+        "name": "System Administrator",
+        "email": "admin@freibad-dabringhausen.de",
+        "created": "2025-06-11 13:16:46",
+        "last_login": null,
+        "active": true,
+        "department": "Systemverwaltung"
+    },
+    "vorstand1": {
+        "password": "$2y$10$.IjWOr0x9LiBL.Q3k.cTxeqBZLlCza4.RVvZ01RgTfrLnB8ckCuuK",
+        "role": "vorstand",
+        "name": "1. Vorsitzende\/r",
+        "email": "vorstand@freibad-dabringhausen.de",
+        "created": "2025-06-11 13:16:46",
+        "last_login": null,
+        "active": true,
+        "department": "Vereinsf\u00fchrung"
+    },
+    "kassenwart": {
+        "password": "$2y$10$9WbcfhEjF5Uo5lVsGMUD2.ybEs4dfpbi5zg\/jipBgovVxDzkAYcha",
+        "role": "kassenwart",
+        "name": "Kassenwart\/in",
+        "email": "kasse@freibad-dabringhausen.de",
+        "created": "2025-06-11 13:16:46",
+        "last_login": null,
+        "active": true,
+        "department": "Finanzen"
+    },
+    "technik": {
+        "password": "$2y$10$2b.WAmeCSHu0VhdmRhauHeGQhoWmGTmEke4sY6F938WV3Zs9gZEfa",
+        "role": "technik",
+        "name": "Technischer Leiter",
+        "email": "technik@freibad-dabringhausen.de",
+        "created": "2025-06-11 13:16:47",
+        "last_login": null,
+        "active": true,
+        "department": "Technik & Wartung"
+    }
+}

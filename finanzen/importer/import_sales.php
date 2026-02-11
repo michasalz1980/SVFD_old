@@ -1,0 +1,1063 @@
+<?php
+/**
+ * SV Freibad Dabringhausen e.V. - Verkaufserlös Import System
+ * 
+ * KORRIGIERT MIT CSV-TREUER ÜBERNAHME + ROBUSTER DUPLIKATSPRÜFUNG
+ * 
+ * Wichtige Änderungen:
+ * - Vorzeichen werden 1:1 aus CSV übernommen
+ * - Keine automatischen Korrekturen der Beträge  
+ * - Transaktionstyp-Erkennung nur über Beschreibung
+ * - Verbesserte deutsche Zahlenformat-Erkennung
+ * - ROBUSTE Duplikatsprüfung: Datum/Uhrzeit + Belegnummer (IMMER AKTIV)
+ * - Detailliertes Logging für Duplikate und verdächtige Muster
+ * 
+ * @author SV Freibad Dabringhausen e.V.
+ * @version 2.6 - CSV-treu + Anti-Duplikat
+ * @date 2025-06-15
+ */
+
+// Konfiguration laden
+require_once 'config.php';
+
+// Fehlerbehandlung und Logging
+error_reporting(DEBUG_MODE ? E_ALL : E_ERROR);
+ini_set('display_errors', DEBUG_MODE ? 1 : 0);
+ini_set('memory_limit', MEMORY_LIMIT);
+set_time_limit(MAX_EXECUTION_TIME);
+
+// Zeitzone setzen
+date_default_timezone_set(TIMEZONE);
+
+class SalesImporter {
+    private $pdo;
+    private $log_file;
+    private $dry_run;
+    private $stats;
+    
+    public function __construct($dry_run = null) {
+        $this->dry_run = $dry_run ?? DRY_RUN_MODE;
+        $this->stats = [
+            'processed_files' => 0,
+            'total_rows' => 0,
+            'imported_rows' => 0,
+            'error_rows' => 0,
+            'skipped_rows' => 0,
+            'transaction_types' => [
+                'einlage' => 0,
+                'einnahme' => 0,
+                'entnahme' => 0
+            ],
+            'errors' => []
+        ];
+        
+        $this->initializeLogging();
+        $this->connectDatabase();
+        $this->createDirectories();
+        $this->checkTransactionTypeSupport();
+    }
+    
+    /**
+     * Prüft ob die Datenbank Transaktionstypen unterstützt
+     */
+    private function checkTransactionTypeSupport() {
+        try {
+            $stmt = $this->pdo->query("SHOW COLUMNS FROM pos_sales LIKE 'transaction_type'");
+            if ($stmt->rowCount() === 0) {
+                $this->log('WARNING', 'Spalte transaction_type nicht gefunden. Erwäge die Ausführung des Datenbank-Upgrade-Scripts.');
+            } else {
+                $this->log('INFO', 'Transaktionstyp-Unterstützung aktiviert');
+            }
+        } catch (Exception $e) {
+            $this->log('WARNING', 'Konnte Transaktionstyp-Unterstützung nicht prüfen: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Initialisiert das Logging-System
+     */
+    private function initializeLogging() {
+        $log_filename = LOG_DIR . 'sales_import_' . date('Y-m-d') . '.log';
+        $this->log_file = $log_filename;
+        
+        // Log-Rotation
+        if (file_exists($log_filename) && filesize($log_filename) > LOG_MAX_SIZE) {
+            $this->rotateLogFile($log_filename);
+        }
+        
+        $this->log('INFO', 'Sales Import gestartet' . ($this->dry_run ? ' (DRY RUN MODUS)' : '') . ' - CSV-treue Version mit aktiver Duplikatsprüfung');
+        $this->log('INFO', 'Duplikat-Kriterium: Datum/Uhrzeit + Belegnummer (exakte Übereinstimmung)');
+    }
+    
+    /**
+     * Datenbankverbindung herstellen
+     */
+    private function connectDatabase() {
+        try {
+            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+            $this->pdo = new PDO($dsn, DB_USER, DB_PASS, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false
+            ]);
+            $this->log('INFO', 'Datenbankverbindung erfolgreich hergestellt');
+        } catch (PDOException $e) {
+            $this->log('ERROR', 'Datenbankverbindung fehlgeschlagen: ' . $e->getMessage());
+            throw new Exception('Datenbankverbindung fehlgeschlagen');
+        }
+    }
+    
+    /**
+     * Benötigte Verzeichnisse erstellen
+     */
+    private function createDirectories() {
+        $dirs = [CSV_INPUT_DIR, CSV_ARCHIVE_DIR, CSV_ERROR_DIR, LOG_DIR];
+        foreach ($dirs as $dir) {
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+                $this->log('INFO', "Verzeichnis erstellt: $dir");
+            }
+        }
+    }
+    
+    /**
+     * NEUE parsePrice Funktion - CSV-treue Übernahme mit deutscher Zahlenformat-Unterstützung
+     */
+    private function parsePrice($priceString) {
+        // Leerzeichen entfernen
+        $priceString = trim($priceString);
+        
+        if (empty($priceString)) {
+            throw new Exception("Leerer Preis-String");
+        }
+        
+        // Prüfen ob negativ (vor allen anderen Operationen!)
+        $isNegative = (strpos($priceString, '-') !== false);
+        
+        // Debug-Ausgabe für Entwicklung
+        if (DEBUG_MODE && $isNegative) {
+            $this->log('DEBUG', "CSV-treue Übernahme: Negativer Preis erkannt: '$priceString'");
+        }
+        
+        // Alle Zeichen außer Ziffern, Punkt, Komma entfernen (aber Vorzeichen merken!)
+        $cleanString = preg_replace('/[^0-9.,]/', '', $priceString);
+        
+        if (empty($cleanString)) {
+            throw new Exception("Ungültiger Preis nach Bereinigung: '$priceString'");
+        }
+        
+        // Deutsche Zahlenformate behandeln
+        if (strpos($cleanString, ',') !== false && strpos($cleanString, '.') !== false) {
+            // Format: 1.234,56 (deutsche Tausender.Dezimal)
+            if (strrpos($cleanString, ',') > strrpos($cleanString, '.')) {
+                // Komma ist das Dezimaltrennzeichen
+                $cleanString = str_replace('.', '', $cleanString); // Tausenderpunkte entfernen
+                $cleanString = str_replace(',', '.', $cleanString); // Komma zu Punkt
+            }
+            // Sonst: Format 1,234.56 (englisch) - bleibt unverändert
+        } elseif (strpos($cleanString, ',') !== false) {
+            // Nur Komma vorhanden
+            $commaPos = strrpos($cleanString, ',');
+            $beforeComma = substr($cleanString, 0, $commaPos);
+            $afterComma = substr($cleanString, $commaPos + 1);
+            
+            if (strlen($afterComma) <= 2 && !empty($afterComma)) {
+                // Komma als Dezimaltrennzeichen: 123,45
+                $cleanString = str_replace(',', '.', $cleanString);
+            } else {
+                // Komma als Tausendertrennzeichen: 1,234
+                $cleanString = str_replace(',', '', $cleanString);
+            }
+        }
+        
+        // Zu float konvertieren
+        $price = (float)$cleanString;
+        
+        // WICHTIG: Negativvorzeichen wieder anwenden (CSV-treue Übernahme!)
+        if ($isNegative && $price > 0) {
+            $price = -$price;
+        }
+        
+        // Plausibilitätsprüfung
+        if (abs($price) > 999999.99) {
+            throw new Exception("Preis außerhalb des gültigen Bereichs: " . number_format($price, 2, ',', '.') . " €");
+        }
+        
+        // Debug-Ausgabe
+        if (DEBUG_MODE) {
+            $this->log('DEBUG', "CSV-treue Preis-Parsing: '$priceString' -> " . number_format($price, 2, ',', '.') . " €");
+        }
+        
+        return $price;
+    }
+    
+    /**
+     * Hauptimport-Prozess
+     */
+    public function processImports() {
+        try {
+            $csv_files = $this->findCsvFiles();
+            
+            if (empty($csv_files)) {
+                $this->log('INFO', 'Keine CSV-Dateien zum Import gefunden');
+                return;
+            }
+            
+            $this->log('INFO', 'Gefundene CSV-Dateien: ' . count($csv_files));
+            
+            foreach ($csv_files as $file) {
+                $this->processFile($file);
+            }
+            
+            $this->sendAdminNotification();
+            
+        } catch (Exception $e) {
+            $this->log('ERROR', 'Kritischer Fehler: ' . $e->getMessage());
+            $this->sendErrorNotification($e);
+        }
+    }
+    
+    /**
+     * CSV-Dateien im Input-Verzeichnis finden
+     */
+    private function findCsvFiles() {
+        $files = [];
+        $allowed_extensions = ALLOWED_FILE_EXTENSIONS;
+        
+        foreach (scandir(CSV_INPUT_DIR) as $file) {
+            if ($file === '.' || $file === '..') continue;
+            
+            $filepath = CSV_INPUT_DIR . $file;
+            $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+            
+            if (in_array($extension, $allowed_extensions) && 
+                is_file($filepath) && 
+                filesize($filepath) <= MAX_FILE_SIZE) {
+                $files[] = $filepath;
+            }
+        }
+        
+        return $files;
+    }
+    
+    /**
+     * Einzelne Datei verarbeiten
+     */
+    private function processFile($filepath) {
+        $filename = basename($filepath);
+        $this->log('INFO', "Verarbeite Datei: $filename");
+        
+        try {
+            // Datei-Hash für Duplikat-Prüfung
+            $file_hash = hash_file('sha256', $filepath);
+            
+            // Prüfung auf bereits importierte Datei
+            if ($this->isFileAlreadyImported($file_hash)) {
+                $this->log('WARNING', "Datei bereits importiert (Hash: $file_hash): $filename");
+                $this->moveFile($filepath, CSV_ARCHIVE_DIR, '_already_imported');
+                return;
+            }
+            
+            // CSV analysieren und importieren
+            $result = $this->importCsvFile($filepath, $file_hash);
+            
+            if ($result['success']) {
+                $this->log('INFO', "Import erfolgreich: $filename - {$result['imported']} von {$result['total']} Zeilen");
+                $this->moveFile($filepath, CSV_ARCHIVE_DIR);
+                $this->stats['processed_files']++;
+            } else {
+                $this->log('ERROR', "Import fehlgeschlagen: $filename - {$result['error']}");
+                $this->moveFile($filepath, CSV_ERROR_DIR, '_error');
+            }
+            
+        } catch (Exception $e) {
+            $this->log('ERROR', "Fehler bei Datei $filename: " . $e->getMessage());
+            $this->moveFile($filepath, CSV_ERROR_DIR, '_error');
+            $this->stats['errors'][] = "Datei $filename: " . $e->getMessage();
+        }
+    }
+    
+    /**
+     * CSV-Datei importieren (Verbesserte UTF-8 Behandlung)
+     */
+    private function importCsvFile($filepath, $file_hash) {
+        $filename = basename($filepath);
+        $total_rows = 0;
+        $imported_rows = 0;
+        $error_rows = 0;
+        $import_id = null;
+        
+        try {
+            // Import-Log-Eintrag erstellen (auch bei Dry Run)
+            if (!$this->dry_run) {
+                $import_id = $this->createImportLog($filename, $file_hash);
+            }
+            
+            // CSV-Datei öffnen mit UTF-8 BOM Handling
+            $content = file_get_contents($filepath);
+            
+            // UTF-8 BOM entfernen falls vorhanden
+            if (substr($content, 0, 3) === "\xEF\xBB\xBF") {
+                $content = substr($content, 3);
+                $this->log('INFO', 'UTF-8 BOM erkannt und entfernt');
+            }
+            
+            // Encoding-Erkennung und Konvertierung
+            $encoding = mb_detect_encoding($content, ['UTF-8', 'ISO-8859-1', 'Windows-1252'], true);
+            if ($encoding && $encoding !== 'UTF-8') {
+                $this->log('INFO', "Encoding erkannt: $encoding, konvertiere zu UTF-8");
+                $content = mb_convert_encoding($content, 'UTF-8', $encoding);
+            }
+            
+            // Temporäre Datei für verarbeiteten Inhalt
+            $temp_file = tempnam(sys_get_temp_dir(), 'csv_import_');
+            file_put_contents($temp_file, $content);
+            
+            $handle = fopen($temp_file, 'r');
+            if (!$handle) {
+                throw new Exception("Kann verarbeitete CSV-Datei nicht öffnen: $filepath");
+            }
+            
+            // Header-Zeile lesen und validieren
+            $header = fgetcsv($handle, 0, CSV_DELIMITER, CSV_ENCLOSURE, CSV_ESCAPE);
+            if (!$this->validateCsvHeader($header)) {
+                throw new Exception("Ungültige CSV-Struktur in Datei: $filename");
+            }
+            
+            $this->log('INFO', "CSV-Header validiert: " . implode(', ', $header));
+            
+            // Daten batch-weise verarbeiten
+            $batch_data = [];
+            $row_number = 1; // Header ist Zeile 0
+            
+            while (($row = fgetcsv($handle, 0, CSV_DELIMITER, CSV_ENCLOSURE, CSV_ESCAPE)) !== false) {
+                $row_number++;
+                $total_rows++;
+                
+                if ($total_rows > MAX_IMPORT_ROWS) {
+                    $this->log('WARNING', "Maximale Anzahl Zeilen erreicht: " . MAX_IMPORT_ROWS);
+                    break;
+                }
+                
+                try {
+                    $parsed_row = $this->parseRow($row, $header);
+                    
+                    if ($this->validateRow($parsed_row)) {
+                        // VERBESSERTE Duplikat-Prüfung mit detailliertem Logging
+                        if (!$this->isDuplicateRow($parsed_row)) {
+                            $batch_data[] = $parsed_row;
+                            
+                            // Batch verarbeiten
+                            if (count($batch_data) >= BATCH_SIZE) {
+                                $batch_result = $this->processBatch($batch_data, $import_id);
+                                $imported_rows += $batch_result['imported'];
+                                $error_rows += $batch_result['errors'];
+                                $batch_data = [];
+                            }
+                        } else {
+                            // Detaillierte Duplikat-Statistiken
+                            $duplicate_info = $this->getDuplicateInfo($parsed_row);
+                            $this->log('INFO', "DUPLIKAT übersprungen: Zeile $row_number - Bonnr '{$parsed_row['receipt_number']}' vom " . 
+                                      $parsed_row['transaction_date']->format('d.m.Y H:i:s') . 
+                                      " (Exakte Treffer: {$duplicate_info['exact_match']})");
+                            
+                            // Warnung bei verdächtigen Mustern
+                            if ($duplicate_info['receipt_only'] > 1 && $duplicate_info['same_day'] != $duplicate_info['exact_match']) {
+                                $this->log('WARNING', "Verdächtig: Bonnr '{$parsed_row['receipt_number']}' existiert {$duplicate_info['receipt_only']}x, davon {$duplicate_info['same_day']}x am gleichen Tag");
+                            }
+                            
+                            $this->stats['skipped_rows']++;
+                        }
+                    } else {
+                        $error_rows++;
+                        $this->logImportError($import_id, $row_number, $row, 'Validierungsfehler');
+                    }
+                    
+                } catch (Exception $e) {
+                    $error_rows++;
+                    $this->log('WARNING', "Fehler in Zeile $row_number: " . $e->getMessage());
+                    $this->logImportError($import_id, $row_number, $row, $e->getMessage());
+                    
+                    if (!CONTINUE_ON_ERROR || $error_rows > MAX_ERRORS_PER_FILE) {
+                        throw new Exception("Zu viele Fehler in Datei: $filename");
+                    }
+                }
+            }
+            
+            // Verbleibende Batch-Daten verarbeiten
+            if (!empty($batch_data)) {
+                $batch_result = $this->processBatch($batch_data, $import_id);
+                $imported_rows += $batch_result['imported'];
+                $error_rows += $batch_result['errors'];
+            }
+            
+            fclose($handle);
+            unlink($temp_file); // Temporäre Datei löschen
+            
+            // Import-Log aktualisieren
+            if (!$this->dry_run && $import_id) {
+                $this->updateImportLog($import_id, $total_rows, $imported_rows, $error_rows);
+            }
+            
+            // Statistiken aktualisieren
+            $this->stats['total_rows'] += $total_rows;
+            $this->stats['imported_rows'] += $imported_rows;
+            $this->stats['error_rows'] += $error_rows;
+            
+            return [
+                'success' => true,
+                'total' => $total_rows,
+                'imported' => $imported_rows,
+                'errors' => $error_rows
+            ];
+            
+        } catch (Exception $e) {
+            if (isset($handle) && $handle) {
+                fclose($handle);
+            }
+            if (isset($temp_file) && file_exists($temp_file)) {
+                unlink($temp_file);
+            }
+            
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+    
+    /**
+     * CSV-Header validieren (Verbesserte Version)
+     */
+    private function validateCsvHeader($header) {
+        $expected_columns = ['Datum/Uhrzeit', 'Preis', 'Bezeichnung', 'Menge', 'Zahlung', 'Bonnr.'];
+        
+        // Header bereinigen - alle leeren Spalten am Ende entfernen
+        $header = array_map('trim', $header);
+        while (count($header) > 0 && end($header) === '') {
+            array_pop($header);
+        }
+        
+        $this->log('DEBUG', 'Header gefunden: ' . count($header) . ' Spalten: ' . implode(', ', $header));
+        
+        // Mindestens 6 Spalten erforderlich
+        if (count($header) < count($expected_columns)) {
+            $this->log('ERROR', 'Zu wenige Spalten: ' . count($header) . ', erwartet: ' . count($expected_columns));
+            return false;
+        }
+        
+        // Erste 6 Spalten prüfen
+        for ($i = 0; $i < count($expected_columns); $i++) {
+            if (trim($header[$i]) !== $expected_columns[$i]) {
+                $this->log('ERROR', "Spalte $i stimmt nicht überein: '{$header[$i]}' != '{$expected_columns[$i]}'");
+                return false;
+            }
+        }
+        
+        if (count($header) > count($expected_columns)) {
+            $this->log('INFO', 'CSV hat zusätzliche Spalten - wird ignoriert');
+        }
+        
+        return true;
+    }
+    
+    /**
+     * KORRIGIERTE CSV-Zeile parsen - CSV-treue Übernahme mit verbesserter Preis-Behandlung
+     */
+    private function parseRow($row, $header) {
+        // Alle leeren Felder am Ende entfernen (unabhängig von der Anzahl)
+        while (count($row) > 0 && trim(end($row)) === '') {
+            array_pop($row);
+        }
+        
+        // Prüfen ob mindestens 6 Spalten vorhanden sind
+        if (count($row) < 6) {
+            throw new Exception("Zu wenige Spalten in Datenzeile: " . count($row) . " (benötigt: 6)");
+        }
+        
+        // Warnung bei zu vielen Spalten (mehr als 6)
+        if (count($row) > 6) {
+            $this->log('DEBUG', "Zusätzliche Spalten gefunden (" . count($row) . "), verwende nur die ersten 6");
+        }
+        
+        $parsed = [];
+        
+        // Datum/Uhrzeit parsen
+        $datetime_str = trim($row[0]);
+        $parsed['transaction_date'] = DateTime::createFromFormat('d.m.Y H:i:s', $datetime_str);
+        if (!$parsed['transaction_date']) {
+            throw new Exception("Ungültiges Datumsformat: $datetime_str (erwartet: dd.mm.yyyy hh:mm:ss)");
+        }
+        
+        // KRITISCH: Preis mit korrigierter parsePrice Funktion (CSV-treue Übernahme!)
+        $price_str = trim($row[1]);
+        $parsed['price'] = $this->parsePrice($price_str);
+        
+        // Produktbeschreibung (UTF-8 sicherstellen)
+        $parsed['product_description'] = trim($row[2]);
+        
+        // WICHTIG: Transaktionstyp ermitteln (NUR für Statistiken, NICHT für automatische Korrekturen!)
+        $parsed['transaction_type'] = $this->determineTransactionType($parsed['product_description'], $parsed['price']);
+        
+        // Debug-Ausgabe für CSV-treue Übernahme
+        if (DEBUG_MODE) {
+            $this->log('DEBUG', "CSV-treue Zeile: Preis=" . number_format($parsed['price'], 2, ',', '.') . 
+                       "€, Typ=" . $parsed['transaction_type'] . ", Beschreibung=" . $parsed['product_description']);
+        }
+        
+        // Menge
+        $quantity_str = trim($row[3]);
+        $parsed['quantity'] = intval($quantity_str);
+        if ($parsed['quantity'] <= 0) {
+            throw new Exception("Ungültige Menge: $quantity_str (muss größer als 0 sein)");
+        }
+        
+        // Zahlungsart
+        $parsed['payment_method'] = trim($row[4]);
+        
+        // Belegnummer
+        $parsed['receipt_number'] = trim($row[5]);
+        if (empty($parsed['receipt_number'])) {
+            throw new Exception("Belegnummer darf nicht leer sein");
+        }
+        
+        return $parsed;
+    }
+    
+    /**
+     * KORRIGIERTE Transaktionstyp ermitteln - NUR über Beschreibung, NICHT über Vorzeichen!
+     */
+    private function determineTransactionType($description, $price) {
+        $description_lower = strtolower($description);
+        
+        // Einlagen-Pattern (sehr spezifisch)
+        $einlagePatterns = [
+            'einlage:',
+            'einlage ',
+            'anfangsbestand',
+            'einzahlung',
+            'startguthaben',
+            'initial',
+            'kassensturz einlage'
+        ];
+        
+        foreach ($einlagePatterns as $pattern) {
+            if (strpos($description_lower, $pattern) !== false) {
+                return 'einlage';
+            }
+        }
+        
+        // Entnahmen-Pattern (erweitert) - NUR aufgrund der Beschreibung!
+        $entnahmePatterns = [
+            'entnahme:',
+            'entnahme ',
+            'bargelsentnahme',
+            'kassensturz entnahme',
+            'geldentnahme',
+            'auszahlung',
+            'herausnahme'
+        ];
+        
+        foreach ($entnahmePatterns as $pattern) {
+            if (strpos($description_lower, $pattern) !== false) {
+                return 'entnahme';
+            }
+        }
+        
+        // ENTFERNT: Automatische Entnahme-Erkennung bei negativen Preisen
+        // Grund: CSV-Vorzeichen sind führend, negative Preise könnten auch Stornos sein
+        
+        // Standard: Alles andere = Einnahmen (auch negative Werte, wenn nicht explizit als Entnahme bezeichnet)
+        return 'einnahme';
+    }
+    
+    /**
+     * Zeile validieren
+     */
+    private function validateRow($row) {
+        // Pflichtfelder prüfen
+        if (empty($row['product_description']) || empty($row['receipt_number'])) {
+            return false;
+        }
+        
+        // Datum validieren
+        if (VALIDATE_DATES && !$row['transaction_date']) {
+            return false;
+        }
+        
+        // Preis validieren (KORRIGIERT: Erlaubt alle Preise aus CSV)
+        if (VALIDATE_PRICES) {
+            if (!is_numeric($row['price'])) {
+                return false;
+            }
+            // ENTFERNT: Automatische Ablehnung negativer Preise
+            // CSV-treue Übernahme: Wenn es in der CSV steht, ist es gültig
+        }
+        
+        // Menge validieren
+        if ($row['quantity'] <= 0) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * VERBESSERTE Prüfung auf Duplikate - Datum/Uhrzeit + Bonnr (IMMER AKTIV)
+     */
+    private function isDuplicateRow($row) {
+        // Duplikatsprüfung ist IMMER aktiv - keine Konfiguration mehr nötig
+        return $this->checkDuplicateByDateAndReceipt($row);
+    }
+    
+    /**
+     * ROBUSTE Duplikat-Prüfung per Datum/Uhrzeit UND Belegnummer
+     */
+    private function checkDuplicateByDateAndReceipt($row) {
+        try {
+            // Genaue Prüfung: Datum/Uhrzeit (bis zur Sekunde) + Belegnummer
+            $sql = "SELECT COUNT(*) FROM pos_sales 
+                    WHERE receipt_number = ? 
+                    AND transaction_date = ?";
+            
+            $stmt = $this->pdo->prepare($sql);
+            $formatted_date = $row['transaction_date']->format('Y-m-d H:i:s');
+            $stmt->execute([$row['receipt_number'], $formatted_date]);
+            
+            $count = $stmt->fetchColumn();
+            $is_duplicate = ($count > 0);
+            
+            // Detailliertes Logging für Duplikate
+            if ($is_duplicate) {
+                $this->log('INFO', "DUPLIKAT ERKANNT: Bonnr '{$row['receipt_number']}' vom {$formatted_date} bereits vorhanden");
+                
+                // Zusätzliche Info: Welcher Datensatz bereits existiert
+                $existing_sql = "SELECT price, product_description, import_id FROM pos_sales 
+                                WHERE receipt_number = ? AND transaction_date = ? LIMIT 1";
+                $existing_stmt = $this->pdo->prepare($existing_sql);
+                $existing_stmt->execute([$row['receipt_number'], $formatted_date]);
+                $existing = $existing_stmt->fetch();
+                
+                if ($existing) {
+                    $existing_price = number_format($existing['price'], 2, ',', '.');
+                    $this->log('DEBUG', "Existierender Datensatz: {$existing_price}€ - '{$existing['product_description']}' (Import-ID: {$existing['import_id']})");
+                }
+            } else {
+                // Debug für neue Datensätze
+                $this->log('DEBUG', "NEU: Bonnr '{$row['receipt_number']}' vom {$formatted_date} wird importiert");
+            }
+            
+            return $is_duplicate;
+            
+        } catch (Exception $e) {
+            // Bei Fehlern in der Duplikatsprüfung: Als Duplikat behandeln (sicherheitshalber)
+            $this->log('ERROR', "Fehler bei Duplikatsprüfung für Bonnr '{$row['receipt_number']}': " . $e->getMessage());
+            return true; // Sicherheitshalber als Duplikat behandeln
+        }
+    }
+    
+    /**
+     * ZUSÄTZLICHE Duplikat-Prüfung für detaillierte Statistiken
+     */
+    private function getDuplicateInfo($row) {
+        try {
+            // Prüfe verschiedene Duplikat-Szenarien für bessere Analyse
+            $results = [];
+            
+            // 1. Exakte Übereinstimmung (Datum + Bonnr) - HAUPTKRITERIUM
+            $sql1 = "SELECT COUNT(*) FROM pos_sales WHERE receipt_number = ? AND transaction_date = ?";
+            $stmt1 = $this->pdo->prepare($sql1);
+            $stmt1->execute([$row['receipt_number'], $row['transaction_date']->format('Y-m-d H:i:s')]);
+            $results['exact_match'] = $stmt1->fetchColumn();
+            
+            // 2. Nur Belegnummer (für Analyse)
+            $sql2 = "SELECT COUNT(*) FROM pos_sales WHERE receipt_number = ?";
+            $stmt2 = $this->pdo->prepare($sql2);
+            $stmt2->execute([$row['receipt_number']]);
+            $results['receipt_only'] = $stmt2->fetchColumn();
+            
+            // 3. Gleicher Tag mit anderer Uhrzeit (verdächtig)
+            $sql3 = "SELECT COUNT(*) FROM pos_sales WHERE receipt_number = ? AND DATE(transaction_date) = ?";
+            $stmt3 = $this->pdo->prepare($sql3);
+            $stmt3->execute([$row['receipt_number'], $row['transaction_date']->format('Y-m-d')]);
+            $results['same_day'] = $stmt3->fetchColumn();
+            
+            return $results;
+            
+        } catch (Exception $e) {
+            $this->log('WARNING', "Fehler bei detaillierter Duplikat-Analyse: " . $e->getMessage());
+            return ['exact_match' => 0, 'receipt_only' => 0, 'same_day' => 0];
+        }
+    }
+    
+    /**
+     * Batch verarbeiten (Erweitert mit Transaktionstyp-Statistiken)
+     */
+    private function processBatch($batch_data, $import_id) {
+        $imported = 0;
+        $errors = 0;
+        $duplicates = 0;
+        
+        if ($this->dry_run) {
+            // Dry Run: Nur simulieren
+            foreach ($batch_data as $row) {
+                $this->log('DEBUG', "DRY RUN: Würde importieren - " . 
+                    $row['transaction_date']->format('Y-m-d H:i:s') . " - " . 
+                    $row['product_description'] . " - " . 
+                    number_format($row['price'], 2, ',', '.') . "€ (" . $row['transaction_type'] . ")");
+                $imported++;
+                
+                // Transaktionstyp-Statistiken aktualisieren
+                $this->stats['transaction_types'][$row['transaction_type']]++;
+            }
+        } else {
+            // Echter Import mit Transaktionstyp (Trigger setzt automatisch transaction_type)
+            $sql = "INSERT INTO pos_sales (transaction_date, price, product_description, quantity, 
+                    payment_method, receipt_number, import_id, product_id, payment_method_id) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $this->pdo->prepare($sql);
+            
+            foreach ($batch_data as $row) {
+                try {
+                    // Einzelne Zeile einfügen
+                    $product_id = $this->getProductId($row['product_description']);
+                    $payment_method_id = $this->getPaymentMethodId($row['payment_method']);
+                    
+                    $stmt->execute([
+                        $row['transaction_date']->format('Y-m-d H:i:s'),
+                        $row['price'], // WICHTIG: Preis wird 1:1 aus CSV übernommen!
+                        $row['product_description'],
+                        $row['quantity'],
+                        $row['payment_method'],
+                        $row['receipt_number'],
+                        $import_id,
+                        $product_id,
+                        $payment_method_id
+                    ]);
+                    
+                    $imported++;
+                    
+                    // Transaktionstyp-Statistiken aktualisieren
+                    $this->stats['transaction_types'][$row['transaction_type']]++;
+                    
+                    // Debug für kritische Fälle
+                    if (DEBUG_MODE && ($row['price'] < 0 || $row['transaction_type'] === 'entnahme')) {
+                        $this->log('DEBUG', "CSV-treuer Import: " . number_format($row['price'], 2, ',', '.') . 
+                                   "€ als " . $row['transaction_type'] . " importiert");
+                    }
+                    
+                } catch (PDOException $e) {
+                    if ($e->getCode() == 23000 && strpos($e->getMessage(), 'unique') !== false) {
+                        // Duplikat durch Unique-Constraint erkannt
+                        $duplicates++;
+                        $this->log('INFO', "DUPLIKAT durch DB-Constraint erkannt: Bonnr '{$row['receipt_number']}' vom " . 
+                                  $row['transaction_date']->format('d.m.Y H:i:s') . " - " . number_format($row['price'], 2, ',', '.') . "€");
+                        
+                        // Zusätzliche Analyse bei unerwarteten DB-Duplikaten
+                        $this->log('DEBUG', "Hinweis: Duplikat wurde erst von Datenbank erkannt. Mögliche Race-Condition oder fehlerhafte Vorab-Prüfung.");
+                    } else {
+                        // Echter Fehler
+                        $errors++;
+                        $this->log('ERROR', "Import-Fehler für Bonnr '{$row['receipt_number']}': " . $e->getMessage());
+                        
+                        // Detaillierte Fehler-Info für Debugging
+                        $this->log('DEBUG', "Fehlerdaten: " . $row['transaction_date']->format('d.m.Y H:i:s') . 
+                                   " - " . number_format($row['price'], 2, ',', '.') . "€ - '{$row['product_description']}'");
+                    }
+                }
+            }
+        }
+        
+        // Duplikate zu Statistiken hinzufügen
+        $this->stats['skipped_rows'] += $duplicates;
+        
+        if ($duplicates > 0) {
+            $this->log('INFO', "Batch verarbeitet: $imported neu, $duplicates Duplikate, $errors Fehler");
+        }
+        
+        return ['imported' => $imported, 'errors' => $errors, 'duplicates' => $duplicates];
+    }
+    
+    /**
+     * Produkt-ID anhand der Beschreibung ermitteln
+     */
+    private function getProductId($description) {
+        $sql = "SELECT product_id FROM pos_products WHERE description = ? LIMIT 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$description]);
+        
+        return $stmt->fetchColumn() ?: null;
+    }
+    
+    /**
+     * Zahlungsart-ID anhand der Bezeichnung ermitteln
+     */
+    private function getPaymentMethodId($method_name) {
+        $sql = "SELECT payment_method_id FROM pos_payment_methods WHERE method_name = ? LIMIT 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$method_name]);
+        
+        return $stmt->fetchColumn() ?: null;
+    }
+    
+    /**
+     * Prüfung ob Datei bereits importiert wurde
+     */
+    private function isFileAlreadyImported($file_hash) {
+        $sql = "SELECT COUNT(*) FROM pos_import_log WHERE file_hash = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$file_hash]);
+        
+        return $stmt->fetchColumn() > 0;
+    }
+    
+    /**
+     * Import-Log-Eintrag erstellen
+     */
+    private function createImportLog($filename, $file_hash) {
+        $sql = "INSERT INTO pos_import_log (filename, file_hash, dry_run) VALUES (?, ?, ?)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$filename, $file_hash, $this->dry_run ? 1 : 0]);
+        
+        return $this->pdo->lastInsertId();
+    }
+    
+    /**
+     * Import-Log aktualisieren
+     */
+    private function updateImportLog($import_id, $total_rows, $imported_rows, $error_rows) {
+        $status = ($error_rows > 0) ? 
+            (($imported_rows > 0) ? 'PARTIAL' : 'ERROR') : 'SUCCESS';
+        
+        $sql = "UPDATE pos_import_log SET total_rows = ?, imported_rows = ?, error_rows = ?, status = ? WHERE import_id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$total_rows, $imported_rows, $error_rows, $status, $import_id]);
+    }
+    
+    /**
+     * Import-Fehler protokollieren
+     */
+    private function logImportError($import_id, $row_number, $csv_data, $error_message) {
+        if (!$this->dry_run && $import_id) {
+            $sql = "INSERT INTO pos_import_errors (import_id, row_number, csv_data, error_message) VALUES (?, ?, ?, ?)";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$import_id, $row_number, implode(';', $csv_data), $error_message]);
+        }
+    }
+    
+    /**
+     * Datei verschieben
+     */
+    private function moveFile($source, $destination_dir, $suffix = '') {
+        $filename = basename($source);
+        $timestamp = date('Y-m-d_H-i-s');
+        $new_filename = pathinfo($filename, PATHINFO_FILENAME) . '_' . $timestamp . $suffix . '.' . pathinfo($filename, PATHINFO_EXTENSION);
+        $destination = $destination_dir . $new_filename;
+        
+        if (rename($source, $destination)) {
+            $this->log('INFO', "Datei verschoben: $filename -> $new_filename");
+            return true;
+        } else {
+            $this->log('ERROR', "Fehler beim Verschieben der Datei: $filename");
+            return false;
+        }
+    }
+    
+    /**
+     * Admin-Benachrichtigung senden (Erweitert mit CSV-treuer Information)
+     */
+    private function sendAdminNotification() {
+        $subject = 'SV Freibad - Verkaufserlös Import (CSV-treu) ' . ($this->dry_run ? '(DRY RUN) ' : '') . 
+                   (empty($this->stats['errors']) ? 'Erfolgreich' : 'Mit Fehlern');
+        
+        $message = $this->buildNotificationMessage();
+        
+        $this->sendMail(ADMIN_EMAIL, $subject, $message);
+    }
+    
+    /**
+     * Fehler-Benachrichtigung senden
+     */
+    private function sendErrorNotification($exception) {
+        $subject = 'SV Freibad - Kritischer Import-Fehler (CSV-treu)';
+        $message = "Ein kritischer Fehler ist beim CSV-treuen Import der Verkaufserlöse aufgetreten:\n\n";
+        $message .= "Fehler: " . $exception->getMessage() . "\n";
+        $message .= "Datei: " . $exception->getFile() . "\n";
+        $message .= "Zeile: " . $exception->getLine() . "\n";
+        $message .= "Zeit: " . date('Y-m-d H:i:s') . "\n\n";
+        $message .= "Bitte prüfen Sie die Log-Dateien für weitere Details.";
+        
+        $this->sendMail(ADMIN_EMAIL, $subject, $message);
+    }
+    
+    /**
+     * Benachrichtigungs-Nachricht erstellen (Erweitert mit CSV-treuer Information)
+     */
+    private function buildNotificationMessage() {
+        $message = "Import-Bericht für SV Freibad Dabringhausen e.V.\n";
+        $message .= "==========================================\n\n";
+        
+        if ($this->dry_run) {
+            $message .= "*** DRY RUN MODUS - KEINE DATEN WURDEN IMPORTIERT ***\n\n";
+        }
+        
+        $message .= "🎯 CSV-TREUE VERSION - Vorzeichen 1:1 übernommen\n\n";
+        
+        $message .= "Datum/Zeit: " . date('Y-m-d H:i:s') . "\n";
+        $message .= "Verarbeitete Dateien: " . $this->stats['processed_files'] . "\n";
+        $message .= "Gesamtzeilen: " . $this->stats['total_rows'] . "\n";
+        $message .= "Importierte Zeilen: " . $this->stats['imported_rows'] . "\n";
+        $message .= "Fehlerhafte Zeilen: " . $this->stats['error_rows'] . "\n";
+        $message .= "Übersprungene Duplikate: " . $this->stats['skipped_rows'] . "\n";
+        
+        // Transaktionstyp-Statistiken hinzufügen
+        $message .= "\nTransaktionstypen (erkannt):\n";
+        $message .= "--------------------------\n";
+        $total_types = array_sum($this->stats['transaction_types']);
+        foreach ($this->stats['transaction_types'] as $type => $count) {
+            $percentage = $total_types > 0 ? round(($count / $total_types) * 100, 1) : 0;
+            $type_name = ucfirst($type) . 'n'; // einlage -> Einlagen
+            $message .= sprintf("%-12s: %5d (%5.1f%%)\n", $type_name, $count, $percentage);
+        }
+        
+        // CSV-treue Hinweise
+        $message .= "\n📋 CSV-treue Verarbeitung:\n";
+        $message .= "- Vorzeichen werden 1:1 aus CSV übernommen\n";
+        $message .= "- Negative Preise bleiben negativ (auch bei Einnahmen)\n";
+        $message .= "- Transaktionstyp-Erkennung nur über Beschreibung\n";
+        $message .= "- Keine automatischen Preis-Korrekturen\n";
+        
+        // Duplikat-Analyse (VERBESSERT)
+        if ($this->stats['skipped_rows'] > 0) {
+            $duplicate_rate = ($this->stats['skipped_rows'] / max($this->stats['total_rows'], 1)) * 100;
+            $message .= "\n🔍 Duplikat-Analyse:\n";
+            $message .= "-------------------\n";
+            $message .= "Duplikate erkannt: " . $this->stats['skipped_rows'] . " (" . round($duplicate_rate, 2) . "%)\n";
+            $message .= "Kriterium: Datum/Uhrzeit + Belegnummer (exakte Übereinstimmung)\n";
+            
+            if ($duplicate_rate > 90) {
+                $message .= "\n⚠️ HINWEIS: Sehr hohe Duplikatsrate!\n";
+                $message .= "Die meisten Daten sind bereits in der Datenbank vorhanden.\n";
+                $message .= "Dies ist normal bei wiederholten Imports derselben Datei.\n";
+            } elseif ($duplicate_rate > 30) {
+                $message .= "\n💡 HINWEIS: Mittlere Duplikatsrate\n";
+                $message .= "Prüfen Sie, ob die CSV-Datei bereits teilweise importiert wurde.\n";
+            } else {
+                $message .= "\n✅ Normale Duplikatsrate - hauptsächlich neue Daten\n";
+            }
+        } else {
+            $message .= "\n✨ Keine Duplikate erkannt - alle Daten sind neu!\n";
+        }
+        
+        $message .= "\n";
+        
+        if (!empty($this->stats['errors'])) {
+            $message .= "Aufgetretene Fehler:\n";
+            $message .= "-------------------\n";
+            foreach ($this->stats['errors'] as $error) {
+                $message .= "- " . $error . "\n";
+            }
+            $message .= "\n";
+        }
+        
+        $success_rate = ($this->stats['imported_rows'] / max($this->stats['total_rows'], 1)) * 100;
+        $message .= "Erfolgsrate (neue Daten): " . round($success_rate, 2) . "%\n";
+        
+        $total_processed = $this->stats['imported_rows'] + $this->stats['skipped_rows'];
+        $processing_rate = ($total_processed / max($this->stats['total_rows'], 1)) * 100;
+        $message .= "Verarbeitungsrate (gesamt): " . round($processing_rate, 2) . "%\n\n";
+        
+        $message .= "Log-Datei: " . $this->log_file . "\n";
+        $message .= "\nMit freundlichen Grüßen\nIhr automatisiertes Import-System";
+        $message .= "\n\n✨ NEU: CSV-treue Übernahme mit verbesserter Preis-Erkennung aktiviert";
+        
+        return $message;
+    }
+    
+    /**
+     * E-Mail senden
+     */
+    private function sendMail($to, $subject, $message) {
+        try {
+            $headers = [
+                'From: ' . SENDER_EMAIL,
+                'Reply-To: ' . SENDER_EMAIL,
+                'X-Mailer: PHP/' . phpversion(),
+                'Content-Type: text/plain; charset=UTF-8'
+            ];
+            
+            if (mail($to, $subject, $message, implode("\r\n", $headers))) {
+                $this->log('INFO', "E-Mail gesendet an: $to");
+            } else {
+                $this->log('ERROR', "E-Mail konnte nicht gesendet werden an: $to");
+            }
+            
+        } catch (Exception $e) {
+            $this->log('ERROR', "E-Mail-Fehler: " . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Log-Eintrag schreiben
+     */
+    private function log($level, $message) {
+        $timestamp = date('Y-m-d H:i:s');
+        $log_entry = "[$timestamp] [$level] $message" . PHP_EOL;
+        
+        file_put_contents($this->log_file, $log_entry, FILE_APPEND | LOCK_EX);
+        
+        if (VERBOSE_LOGGING || $level === 'ERROR' || DEBUG_MODE) {
+            echo $log_entry;
+        }
+    }
+    
+    /**
+     * Log-Datei rotieren
+     */
+    private function rotateLogFile($log_file) {
+        for ($i = LOG_ROTATE_COUNT - 1; $i >= 1; $i--) {
+            $old_file = $log_file . '.' . $i;
+            $new_file = $log_file . '.' . ($i + 1);
+            
+            if (file_exists($old_file)) {
+                rename($old_file, $new_file);
+            }
+        }
+        
+        if (file_exists($log_file)) {
+            rename($log_file, $log_file . '.1');
+        }
+    }
+    
+    /**
+     * Destruktor - Aufräumen
+     */
+    public function __destruct() {
+        if ($this->pdo) {
+            $this->pdo = null;
+        }
+    }
+}
+
+// Kommandozeilen-Parameter verarbeiten
+$dry_run = null;
+if (isset($argv)) {
+    $options = getopt('d::', ['dry-run::']);
+    if (isset($options['d']) || isset($options['dry-run'])) {
+        $dry_run = true;
+    }
+}
+
+// Import starten
+try {
+    $importer = new SalesImporter($dry_run);
+    $importer->processImports();
+    
+    echo "CSV-treuer Import abgeschlossen. Details in der Log-Datei.\n";
+    
+} catch (Exception $e) {
+    echo "Kritischer Fehler: " . $e->getMessage() . "\n";
+    exit(1);
+}
+
+?>

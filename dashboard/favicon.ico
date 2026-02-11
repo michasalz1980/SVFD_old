@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Hintergrund -->
+  <rect width="32" height="32" fill="#3498db" rx="6"/>
+  
+  <!-- Wasserwellen -->
+  <path d="M2 20 Q8 16 16 20 T30 20 L30 26 Q24 22 16 26 T2 26 Z" fill="#ffffff" opacity="0.9"/>
+  <path d="M2 22 Q8 18 16 22 T30 22 L30 28 Q24 24 16 28 T2 28 Z" fill="#ffffff" opacity="0.7"/>
+  
+  <!-- Tropfen -->
+  <circle cx="12" cy="12" r="3" fill="#ffffff" opacity="0.8"/>
+  <circle cx="20" cy="10" r="2" fill="#ffffff" opacity="0.6"/>
+  
+  <!-- Monitoring-Punkt -->
+  <circle cx="24" cy="8" r="1.5" fill="#e74c3c"/>
+</svg>

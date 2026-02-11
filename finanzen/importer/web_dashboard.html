@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>SV Freibad - Import Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .year-filter {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+        }
+
+        .year-filter label {
+            color: white;
+            font-size: 1.1rem;
+            margin-right: 10px;
+            font-weight: 500;
+        }
+
+        .year-filter select {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+            min-width: 150px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .year-filter select:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .year-filter select:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .refresh-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Export Section Styles */
+        .export-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .export-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .export-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, .form-group select {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .export-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 48px;
+        }
+
+        .export-btn:hover {
+            background: linear-gradient(45deg, #218838, #1ea885);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .export-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .export-info {
+            grid-column: 1 / -1;
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 15px;
+        }
+
+        .export-info h4 {
+            color: #667eea;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .export-info ul {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-left: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cash-flow-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .cash-flow-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .cash-flow-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .cash-flow-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid #6c757d;
+            position: relative;
+            overflow: hidden;
+            min-height: 120px;
+        }
+
+        .cash-flow-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .cash-flow-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .cash-flow-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .cash-flow-card.einlagen {
+            border-left-color: #28a745;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        }
+
+        .cash-flow-card.einnahmen {
+            border-left-color: #007bff;
+            background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+        }
+
+        .cash-flow-card.entnahmen {
+            border-left-color: #dc3545;
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+        }
+
+        .cash-flow-icon {
+            font-size: 2.5rem;
+            opacity: 0.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cash-flow-content {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cash-flow-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .cash-flow-amount {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .cash-flow-count {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .cash-flow-description {
+            font-size: 0.75rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .chart-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .table-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .table-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background-color: rgba(102, 126, 234, 0.1);
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        tr:hover {
+            background-color: rgba(102, 126, 234, 0.05);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .error {
+            background: rgba(255, 69, 58, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .success-badge {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        /* Export Success/Error Messages */
+        .export-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+
+        .export-message.success {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid #28a745;
+            color: #155724;
+        }
+
+        .export-message.error {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid #dc3545;
+            color: #721c24;
+        }
+
+        @media (max-width: 1200px) {
+            .cash-flow-card {
+                padding: 18px;
+                gap: 14px;
+                min-height: 110px;
+            }
+
+            .cash-flow-amount {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .cash-flow-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chart-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+            
+            .year-filter {
+                padding: 15px 10px;
+            }
+            
+            .year-filter select {
+                min-width: 120px;
+                font-size: 0.9rem;
+            }
+
+            .refresh-btn {
+                position: static;
+                margin: 20px auto;
+                display: block;
+            }
+
+            .cash-flow-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .cash-flow-card {
+                padding: 16px;
+                gap: 12px;
+                min-height: 100px;
+            }
+
+            .cash-flow-icon {
+                font-size: 2rem;
+            }
+
+            .cash-flow-amount {
+                font-size: 1.3rem;
+            }
+
+            .export-form {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cash-flow-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .cash-flow-card {
+                padding: 14px;
+                min-height: 90px;
+            }
+
+            .cash-flow-amount {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏊‍♂️ SV Freibad Dabringhausen</h1>
+        <div class="subtitle">Import-Dashboard & Analytics</div>
+        
+        <div class="year-filter">
+            <label for="yearSelect">📅 Jahr:</label>
+            <select id="yearSelect" onchange="changeYear()">
+                <option value="">Alle Jahre</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="refresh-btn" onclick="refreshData()">🔄 Aktualisieren</button>
+
+    <div class="container">
+        <div id="loading" class="loading">
+            📊 Lade Daten...
+        </div>
+
+        <div id="content" style="display: none;">
+            <div class="success-badge">
+                ✅ System erfolgreich konfiguriert - Automatische Transaktionstyp-Erkennung aktiv
+            </div>
+
+            <!-- DATEV Export Section -->
+            <div class="export-section">
+                <div class="export-title">
+                    📁 DATEV Export für Kassenbuch
+                </div>
+                
+                <div class="export-form">
+                    <div class="form-group">
+                        <label for="exportStartDate">Von Datum:</label>
+                        <input type="date" id="exportStartDate" name="exportStartDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exportEndDate">Bis Datum:</label>
+                        <input type="date" id="exportEndDate" name="exportEndDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exportType">Export-Typ:</label>
+                        <select id="exportType" name="exportType">
+                            <option value="daily_summary">Tageszusammenfassung</option>
+                            <option value="detailed">Detailliert (alle Transaktionen)</option>
+                            <option value="summary_only">Nur Kassenbewegungen</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="datevFormat">DATEV-Format:</label>
+                        <select id="datevFormat" name="datevFormat">
+                            <option value="simple" selected>Einfaches CSV (ASCII-Import) - EMPFOHLEN</option>
+                            <option value="full">Vollständiges DATEV-Format (EXTF) - Erweitert</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="button" class="export-btn" onclick="exportDATEV()" id="exportButton">
+                            📄 DATEV Export downloaden
+                        </button>
+                    </div>
+                    
+                    <div class="export-info">
+                        <h4>ℹ️ Export-Informationen:</h4>
+                        <ul>
+                            <li><strong>Tageszusammenfassung:</strong> Ein Eintrag pro Tag mit Gesamteinnahmen/-entnahmen/-einlagen</li>
+                            <li><strong>Detailliert:</strong> Jede Transaktion als separate Zeile</li>
+                            <li><strong>Nur Kassenbewegungen:</strong> Einlagen, Einnahmen und Entnahmen (ohne Anfangsbestände)</li>
+                            <li><strong>Gegenkonten:</strong> 43000 (Einnahmen & Einlagen), 13720 (Entnahmen Bar), 13721 (Entnahmen EC)</li>
+                            <li><strong>Import in DATEV:</strong> Bestand > Importieren > ASCII-Daten > Spalten zuordnen</li>
+                        </ul>
+                        
+                        <div id="datevFormatWarning" style="background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107; padding: 10px; margin-top: 15px; border-radius: 4px; display: none;">
+                            <strong>⚠️ ERWEITERT:</strong><br>
+                            Für das vollständige DATEV-Format müssen Sie Ihre Beraternummer und Mandantennummer in <code>datev_export.php</code> konfigurieren.
+                        </div>
+                        
+                        <div style="background: rgba(40, 167, 69, 0.1); border-left: 4px solid #28a745; padding: 10px; margin-top: 15px; border-radius: 4px;">
+                            <strong>✅ EINFACH:</strong><br>
+                            Das einfache CSV-Format funktioniert sofort ohne weitere Konfiguration!
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="exportMessages"></div>
+            </div>
+
+            <!-- Hauptstatistiken -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalTransactions">-</div>
+                    <div class="stat-label">Transaktionen</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalRevenue">-</div>
+                    <div class="stat-label">Umsatz (Einnahmen)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalBons">-</div>
+                    <div class="stat-label">Bons</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgBonValue">-</div>
+                    <div class="stat-label">Ø Bon-Wert</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="importRate">100%</div>
+                    <div class="stat-label">Import-Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgItemsPerBon">-</div>
+                    <div class="stat-label">Artikel/Bon</div>
+                </div>
+            </div>
+
+            <!-- Cash Flow Analyse -->
+            <div class="cash-flow-section">
+                <div class="cash-flow-title">💰 Cash Flow - Einlagen, Einnahmen & Entnahmen</div>
+                <div class="cash-flow-grid">
+                    <div class="cash-flow-card einlagen">
+                        <div class="cash-flow-icon">📥</div>
+                        <div class="cash-flow-content">
+                            <div class="cash-flow-label">Einlagen</div>
+                            <div class="cash-flow-amount" id="einlagenAmount">-</div>
+                            <div class="cash-flow-count" id="einlagenCount">- Transaktionen</div>
+                            <div class="cash-flow-description">Anfangsbestände, Einzahlungen</div>
+                        </div>
+                    </div>
+                    
+                    <div class="cash-flow-card einnahmen">
+                        <div class="cash-flow-icon">💵</div>
+                        <div class="cash-flow-content">
+                            <div class="cash-flow-label">Einnahmen</div>
+                            <div class="cash-flow-amount" id="einnahmenAmount">-</div>
+                            <div class="cash-flow-count" id="einnahmenCount">- Transaktionen</div>
+                            <div class="cash-flow-description">Verkaufserlöse, Tickets, Artikel</div>
+                        </div>
+                    </div>
+                    
+                    <div class="cash-flow-card entnahmen">
+                        <div class="cash-flow-icon">📤</div>
+                        <div class="cash-flow-content">
+                            <div class="cash-flow-label">Entnahmen</div>
+                            <div class="cash-flow-amount" id="entnahmenAmount">-</div>
+                            <div class="cash-flow-count" id="entnahmenCount">- Transaktionen</div>
+                            <div class="cash-flow-description">Bargeldentnahmen, Stornos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="chart-section">
+                <div class="chart-card">
+                    <div class="chart-title" id="dailyChartTitle">📅 Tagesumsätze</div>
+                    <canvas id="dailyRevenueChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">📊 Täglicher Cash Flow</div>
+                    <canvas id="dailyCashFlowChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-card">
+                    <div class="chart-title">💳 Zahlungsarten</div>
+                    <canvas id="paymentMethodChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">🔄 Transaktionstypen</div>
+                    <canvas id="transactionTypeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top Produkte -->
+            <div class="table-section">
+                <div class="table-title">🥇 Top 15 Produkte (nur Einnahmen)</div>
+                <table id="topProductsTable">
+                    <thead>
+                        <tr>
+                            <th>Rang</th>
+                            <th>Produkt</th>
+                            <th>Verkaufte Menge</th>
+                            <th>Umsatz</th>
+                            <th>Anteil</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topProductsBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bon-Analyse -->
+            <div class="table-section">
+                <div class="table-title">🛍️ Bon-Analyse</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="singleItemBons">-</div>
+                        <div class="stat-label">Einzelartikel-Bons</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="multiItemBons">-</div>
+                        <div class="stat-label">Mehrfach-Bons</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="maxItemsPerBon">-</div>
+                        <div class="stat-label">Max. Artikel/Bon</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="multiItemPercentage">-</div>
+                        <div class="stat-label">Mehrfach-Bons %</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Import-Status -->
+            <div class="table-section">
+                <div class="table-title">📋 Letzter Import-Status</div>
+                <table id="importStatusTable">
+                    <tbody id="importStatusBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let dashboardData = null;
+        let dailyChart = null;
+        let paymentChart = null;
+        let dailyCashFlowChart = null;
+        let transactionTypeChart = null;
+        let currentYear = null;
+
+        // Show/hide DATEV format warning
+        function toggleDATEVWarning() {
+            const datevFormat = document.getElementById('datevFormat').value;
+            const warning = document.getElementById('datevFormatWarning');
+            
+            if (datevFormat === 'full') {
+                warning.style.display = 'block';
+            } else {
+                warning.style.display = 'none';
+            }
+        }
+
+        // Export functions
+        async function exportDATEV() {
+            const startDate = document.getElementById('exportStartDate').value;
+            const endDate = document.getElementById('exportEndDate').value;
+            const exportType = document.getElementById('exportType').value;
+            const datevFormat = document.getElementById('datevFormat').value;
+            const exportButton = document.getElementById('exportButton');
+            const messagesDiv = document.getElementById('exportMessages');
+            
+            // Validation
+            if (!startDate || !endDate) {
+                showExportMessage('error', 'Bitte geben Sie einen gültigen Zeitraum an.');
+                return;
+            }
+            
+            if (new Date(startDate) > new Date(endDate)) {
+                showExportMessage('error', 'Das Startdatum muss vor dem Enddatum liegen.');
+                return;
+            }
+            
+            // Disable button and show loading
+            exportButton.disabled = true;
+            exportButton.innerHTML = '⏳ Exportiere...';
+            messagesDiv.innerHTML = '';
+            
+            try {
+                const url = `dashboard_api.php?action=datev_export&start_date=${startDate}&end_date=${endDate}&export_type=${exportType}&use_datev_format=${datevFormat}`;
+                console.log('Export URL:', url); // Debug-Log
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    // Bei HTTP-Fehlern (404, 500, etc.)
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const contentType = response.headers.get('Content-Type');
+                console.log('Response Content-Type:', contentType); // Debug-Log
+                
+                if (contentType && contentType.includes('application/json')) {
+                    // Error response als JSON
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Export fehlgeschlagen');
+                } else if (contentType && (contentType.includes('text/csv') || contentType.includes('application/octet-stream'))) {
+                    // Success - download file
+                    const blob = await response.blob();
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    
+                    // Generate filename
+                    const formatPrefix = datevFormat === 'full' ? 'EXTF_' : 'datev_export_';
+                    const filename = `${formatPrefix}${startDate}_${endDate}_${exportType}.csv`;
+                    link.download = filename;
+                    
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(downloadUrl);
+                    
+                    showExportMessage('success', `Export erfolgreich! Datei "${filename}" wurde heruntergeladen.`);
+                } else {
+                    // Unerwarteter Content-Type
+                    const responseText = await response.text();
+                    console.error('Unexpected response:', responseText);
+                    throw new Error('Unerwartete Server-Antwort. Siehe Browser-Konsole für Details.');
+                }
+            } catch (error) {
+                console.error('Export error:', error);
+                showExportMessage('error', `Export fehlgeschlagen: ${error.message}`);
+            } finally {
+                // Re-enable button
+                exportButton.disabled = false;
+                exportButton.innerHTML = '📄 DATEV Export downloaden';
+            }
+        }
+        
+        function showExportMessage(type, message) {
+            const messagesDiv = document.getElementById('exportMessages');
+            messagesDiv.innerHTML = `
+                <div class="export-message ${type}">
+                    ${type === 'success' ? '✅' : '❌'} ${message}
+                </div>
+            `;
+            
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    messagesDiv.innerHTML = '';
+                }, 5000);
+            }
+        }
+
+        // Set default dates (current month)
+        function setDefaultDates() {
+            const now = new Date();
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            
+            document.getElementById('exportStartDate').value = firstDay.toISOString().split('T')[0];
+            document.getElementById('exportEndDate').value = lastDay.toISOString().split('T')[0];
+        }
+
+        async function loadData(year = null) {
+            const loading = document.getElementById('loading');
+            const content = document.getElementById('content');
+            
+            loading.style.display = 'block';
+            content.style.display = 'none';
+            
+            try {
+                const apiUrl = year ? `dashboard_api.php?action=all&year=${year}` : 'dashboard_api.php?action=all';
+                const response = await fetch(apiUrl);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    dashboardData = result.data;
+                    currentYear = year;
+                    
+                    if (!year || !document.getElementById('yearSelect').children.length > 1) {
+                        await loadYearFilter();
+                    }
+                    
+                    updateStats();
+                    createCharts();
+                    updateTables();
+                    updateCashFlow();
+                    updateYearInfo();
+                    
+                    loading.style.display = 'none';
+                    content.style.display = 'block';
+                } else {
+                    throw new Error(result.message || 'API-Fehler');
+                }
+            } catch (error) {
+                console.error('Fehler beim Laden der Daten:', error);
+                loading.innerHTML = `
+                    <div class="error">
+                        ❌ Fehler beim Laden der Daten: ${error.message}<br>
+                        <button onclick="loadData(${year ? `'${year}'` : 'null'})" style="margin-top: 10px; padding: 5px 15px; cursor: pointer;">Erneut versuchen</button>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadYearFilter() {
+            try {
+                const response = await fetch('dashboard_api.php?action=available_years');
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const yearSelect = document.getElementById('yearSelect');
+                    yearSelect.innerHTML = '<option value="">Alle Jahre</option>';
+                    
+                    result.data.forEach(yearData => {
+                        const option = document.createElement('option');
+                        option.value = yearData.year;
+                        option.textContent = `${yearData.year} (${yearData.revenue.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })})`;
+                        if (yearData.year.toString() === currentYear) {
+                            option.selected = true;
+                        }
+                        yearSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Fehler beim Laden der Jahre:', error);
+            }
+        }
+
+        function changeYear() {
+            const yearSelect = document.getElementById('yearSelect');
+            const selectedYear = yearSelect.value || null;
+            loadData(selectedYear);
+        }
+
+        function refreshData() {
+            loadData(currentYear);
+        }
+
+        function updateYearInfo() {
+            const subtitle = document.querySelector('.subtitle');
+            const chartTitle = document.getElementById('dailyChartTitle');
+            
+            if (currentYear) {
+                subtitle.textContent = `Import-Dashboard & Analytics - Jahr ${currentYear}`;
+                chartTitle.textContent = `📅 Tagesumsätze ${currentYear}`;
+            } else {
+                subtitle.textContent = 'Import-Dashboard & Analytics - Alle Jahre';
+                chartTitle.textContent = '📅 Tagesumsätze (letzte 14 Tage)';
+            }
+        }
+
+        function updateStats() {
+            if (!dashboardData) return;
+            
+            const stats = dashboardData.stats;
+            const bonAnalysis = dashboardData.bon_analysis;
+            
+            document.getElementById('totalTransactions').textContent = stats.total_transactions.toLocaleString('de-DE');
+            document.getElementById('totalRevenue').textContent = stats.total_revenue.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+            document.getElementById('totalBons').textContent = stats.total_bons.toLocaleString('de-DE');
+            document.getElementById('avgBonValue').textContent = stats.avg_bon_value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+            document.getElementById('avgItemsPerBon').textContent = stats.avg_items_per_bon.toFixed(2);
+            document.getElementById('singleItemBons').textContent = bonAnalysis.single_item_bons.toLocaleString('de-DE');
+            document.getElementById('multiItemBons').textContent = bonAnalysis.multi_item_bons.toLocaleString('de-DE');
+            document.getElementById('maxItemsPerBon').textContent = bonAnalysis.max_items_per_bon;
+            document.getElementById('multiItemPercentage').textContent = bonAnalysis.multi_item_percentage.toFixed(1) + '%';
+        }
+
+        function updateCashFlow() {
+            if (!dashboardData || !dashboardData.cash_flow) return;
+            
+            const cashFlow = dashboardData.cash_flow;
+            
+            // Einlagen
+            document.getElementById('einlagenAmount').textContent = 
+                cashFlow.einlagen.amount.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+            document.getElementById('einlagenCount').textContent = 
+                cashFlow.einlagen.count.toLocaleString('de-DE') + ' Transaktionen';
+            
+            // Einnahmen
+            document.getElementById('einnahmenAmount').textContent = 
+                cashFlow.einnahmen.amount.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+            document.getElementById('einnahmenCount').textContent = 
+                cashFlow.einnahmen.count.toLocaleString('de-DE') + ' Transaktionen';
+            
+            // Entnahmen
+            document.getElementById('entnahmenAmount').textContent = 
+                cashFlow.entnahmen.amount.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+            document.getElementById('entnahmenCount').textContent = 
+                cashFlow.entnahmen.count.toLocaleString('de-DE') + ' Transaktionen';
+        }
+
+        function createCharts() {
+            if (!dashboardData) return;
+            
+            // Alte Charts zerstören
+            if (dailyChart) dailyChart.destroy();
+            if (paymentChart) paymentChart.destroy();
+            if (dailyCashFlowChart) dailyCashFlowChart.destroy();
+            if (transactionTypeChart) transactionTypeChart.destroy();
+            
+            // Tagesumsätze Chart (nur Einnahmen)
+            const dailyCtx = document.getElementById('dailyRevenueChart').getContext('2d');
+            dailyChart = new Chart(dailyCtx, {
+                type: 'line',
+                data: {
+                    labels: dashboardData.daily_revenue.map(d => new Date(d.date).toLocaleDateString('de-DE')),
+                    datasets: [{
+                        label: 'Tagesumsatz (Einnahmen)',
+                        data: dashboardData.daily_revenue.map(d => d.revenue),
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Täglicher Cash Flow Chart
+            const cashFlowCtx = document.getElementById('dailyCashFlowChart').getContext('2d');
+            dailyCashFlowChart = new Chart(cashFlowCtx, {
+                type: 'bar',
+                data: {
+                    labels: dashboardData.daily_cash_flow.map(d => new Date(d.date).toLocaleDateString('de-DE')),
+                    datasets: [
+                        {
+                            label: 'Einlagen',
+                            data: dashboardData.daily_cash_flow.map(d => d.einlagen),
+                            backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                            borderColor: '#28a745',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Einnahmen',
+                            data: dashboardData.daily_cash_flow.map(d => d.einnahmen),
+                            backgroundColor: 'rgba(0, 123, 255, 0.8)',
+                            borderColor: '#007bff',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Entnahmen',
+                            data: dashboardData.daily_cash_flow.map(d => -d.entnahmen),
+                            backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                            borderColor: '#dc3545',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { stacked: false },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return Math.abs(value).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Zahlungsarten Chart
+            const paymentCtx = document.getElementById('paymentMethodChart').getContext('2d');
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe'];
+            
+            paymentChart = new Chart(paymentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: dashboardData.payment_methods.map(p => p.payment_method),
+                    datasets: [{
+                        data: dashboardData.payment_methods.map(p => p.revenue),
+                        backgroundColor: colors.slice(0, dashboardData.payment_methods.length),
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // Transaktionstypen Chart
+            const transactionCtx = document.getElementById('transactionTypeChart').getContext('2d');
+            const typeColors = {
+                'einlage': '#28a745',
+                'einnahme': '#007bff',
+                'entnahme': '#dc3545'
+            };
+            
+            transactionTypeChart = new Chart(transactionCtx, {
+                type: 'pie',
+                data: {
+                    labels: dashboardData.transaction_types.map(t => 
+                        t.type.charAt(0).toUpperCase() + t.type.slice(1) + 'n'
+                    ),
+                    datasets: [{
+                        data: dashboardData.transaction_types.map(t => t.amount),
+                        backgroundColor: dashboardData.transaction_types.map(t => typeColors[t.type]),
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { 
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+                                    const percentage = ((context.raw / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(1);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTables() {
+            if (!dashboardData) return;
+            
+            // Top Produkte
+            const topProductsBody = document.getElementById('topProductsBody');
+            topProductsBody.innerHTML = '';
+            
+            dashboardData.top_products.forEach(product => {
+                const row = topProductsBody.insertRow();
+                row.innerHTML = `
+                    <td>${product.rank}</td>
+                    <td title="${product.name}">${product.name.length > 30 ? product.name.substring(0, 30) + '...' : product.name}</td>
+                    <td>${product.quantity.toLocaleString('de-DE')}</td>
+                    <td>${product.revenue.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
+                    <td>${product.percentage.toFixed(1)}%</td>
+                `;
+            });
+
+            // Import Status
+            const importStatusBody = document.getElementById('importStatusBody');
+            importStatusBody.innerHTML = '';
+            
+            if (dashboardData.import_status && dashboardData.import_status.length > 0) {
+                const lastImport = dashboardData.import_status[0];
+                const importData = [
+                    ['Datei', lastImport.filename],
+                    ['Import-Zeit', new Date(lastImport.import_date).toLocaleString('de-DE')],
+                    ['Zeilen verarbeitet', `${lastImport.imported_rows.toLocaleString('de-DE')}/${lastImport.total_rows.toLocaleString('de-DE')}`],
+                    ['Status', lastImport.status === 'SUCCESS' ? '✅ Erfolgreich' : '❌ Fehler'],
+                    ['Erfolgsrate', lastImport.success_rate.toFixed(1) + '%']
+                ];
+
+                importData.forEach(([label, value]) => {
+                    const row = importStatusBody.insertRow();
+                    row.innerHTML = `<td><strong>${label}</strong></td><td>${value}</td>`;
+                });
+            } else {
+                const row = importStatusBody.insertRow();
+                row.innerHTML = '<td colspan="2">Keine Import-Daten verfügbar</td>';
+            }
+        }
+
+        // Initial load
+        loadData();
+        setDefaultDates();
+        
+        // Add event listener for DATEV format selection
+        document.getElementById('datevFormat').addEventListener('change', toggleDATEVWarning);
+        toggleDATEVWarning(); // Initial call
+    </script>
+</body>
+</html>

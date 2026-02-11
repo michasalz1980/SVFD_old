@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SV Freibad - Import Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .chart-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .table-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .table-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background-color: rgba(102, 126, 234, 0.1);
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        tr:hover {
+            background-color: rgba(102, 126, 234, 0.05);
+        }
+
+        .refresh-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .error {
+            background: rgba(255, 69, 58, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .success-badge {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .chart-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏊‍♂️ SV Freibad Dabringhausen</h1>
+        <div class="subtitle">Import-Dashboard & Analytics</div>
+    </div>
+
+    <button class="refresh-btn" onclick="loadData()">🔄 Aktualisieren</button>
+
+    <div class="container">
+        <div id="loading" class="loading">
+            📊 Lade Daten...
+        </div>
+
+        <div id="content" style="display: none;">
+            <div class="success-badge">
+                ✅ System erfolgreich konfiguriert - 100% Import-Rate
+            </div>
+
+            <!-- Hauptstatistiken -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalTransactions">-</div>
+                    <div class="stat-label">Transaktionen</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalRevenue">-</div>
+                    <div class="stat-label">Gesamtumsatz</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalBons">-</div>
+                    <div class="stat-label">Bons</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgBonValue">-</div>
+                    <div class="stat-label">Ø Bon-Wert</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="importRate">100%</div>
+                    <div class="stat-label">Import-Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgItemsPerBon">-</div>
+                    <div class="stat-label">Artikel/Bon</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="chart-section">
+                <div class="chart-card">
+                    <div class="chart-title">📅 Tagesumsätze (letzte 10 Tage)</div>
+                    <canvas id="dailyRevenueChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">💳 Zahlungsarten</div>
+                    <canvas id="paymentMethodChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top Produkte -->
+            <div class="table-section">
+                <div class="table-title">🥇 Top 10 Produkte</div>
+                <table id="topProductsTable">
+                    <thead>
+                        <tr>
+                            <th>Rang</th>
+                            <th>Produkt</th>
+                            <th>Verkaufte Menge</th>
+                            <th>Umsatz</th>
+                            <th>Anteil</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topProductsBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bon-Analyse -->
+            <div class="table-section">
+                <div class="table-title">🛍️ Bon-Analyse</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="singleItemBons">-</div>
+                        <div class="stat-label">Einzelartikel-Bons</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="multiItemBons">-</div>
+                        <div class="stat-label">Mehrfach-Bons</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="maxItemsPerBon">-</div>
+                        <div class="stat-label">Max. Artikel/Bon</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="multiItemPercentage">-</div>
+                        <div class="stat-label">Mehrfach-Bons %</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Import-Status -->
+            <div class="table-section">
+                <div class="table-title">📋 Letzter Import-Status</div>
+                <table id="importStatusTable">
+                    <tbody id="importStatusBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let dashboardData = null;
+        let dailyChart = null;
+        let paymentChart = null;
+
+        async function loadData() {
+            const loading = document.getElementById('loading');
+            const content = document.getElementById('content');
+            
+            loading.style.display = 'block';
+            content.style.display = 'none';
+            
+            try {
+                // Echte API-Daten laden
+                const response = await fetch('dashboard_api.php?action=all');
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    dashboardData = result.data;
+                    updateStats();
+                    createCharts();
+                    updateTables();
+                    
+                    loading.style.display = 'none';
+                    content.style.display = 'block';
+                } else {
+                    throw new Error(result.message || 'API-Fehler');
+                }
+            } catch (error) {
+                console.error('Fehler beim Laden der Daten:', error);
+                loading.innerHTML = `
+                    <div class="error">
+                        ❌ Fehler beim Laden der Daten: ${error.message}<br>
+                        <button onclick="loadData()" style="margin-top: 10px; padding: 5px 15px;">Erneut versuchen</button>
+                    </div>
+                `;
+            }
+        }
+
+        function updateStats() {
+            if (!dashboardData) return;
+            
+            const stats = dashboardData.stats;
+            const bonAnalysis = dashboardData.bon_analysis;
+            
+            document.getElementById('totalTransactions').textContent = stats.total_transactions.toLocaleString('de-DE');
+            document.getElementById('totalRevenue').textContent = stats.total_revenue.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+            document.getElementById('totalBons').textContent = stats.total_bons.toLocaleString('de-DE');
+            document.getElementById('avgBonValue').textContent = stats.avg_bon_value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+            document.getElementById('avgItemsPerBon').textContent = stats.avg_items_per_bon.toFixed(2);
+            document.getElementById('singleItemBons').textContent = bonAnalysis.single_item_bons.toLocaleString('de-DE');
+            document.getElementById('multiItemBons').textContent = bonAnalysis.multi_item_bons.toLocaleString('de-DE');
+            document.getElementById('maxItemsPerBon').textContent = bonAnalysis.max_items_per_bon;
+            document.getElementById('multiItemPercentage').textContent = bonAnalysis.multi_item_percentage.toFixed(1) + '%';
+        }
+
+        function createCharts() {
+            if (!dashboardData) return;
+            
+            // Alte Charts zerstören
+            if (dailyChart) dailyChart.destroy();
+            if (paymentChart) paymentChart.destroy();
+            
+            // Tagesumsätze Chart
+            const dailyCtx = document.getElementById('dailyRevenueChart').getContext('2d');
+            dailyChart = new Chart(dailyCtx, {
+                type: 'line',
+                data: {
+                    labels: dashboardData.daily_revenue.map(d => new Date(d.date).toLocaleDateString('de-DE')),
+                    datasets: [{
+                        label: 'Tagesumsatz',
+                        data: dashboardData.daily_revenue.map(d => d.revenue),
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Zahlungsarten Chart
+            const paymentCtx = document.getElementById('paymentMethodChart').getContext('2d');
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe'];
+            
+            paymentChart = new Chart(paymentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: dashboardData.payment_methods.map(p => p.payment_method),
+                    datasets: [{
+                        data: dashboardData.payment_methods.map(p => p.revenue),
+                        backgroundColor: colors.slice(0, dashboardData.payment_methods.length),
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTables() {
+            if (!dashboardData) return;
+            
+            // Top Produkte
+            const topProductsBody = document.getElementById('topProductsBody');
+            topProductsBody.innerHTML = '';
+            
+            dashboardData.top_products.forEach(product => {
+                const row = topProductsBody.insertRow();
+                row.innerHTML = `
+                    <td>${product.rank}</td>
+                    <td title="${product.name}">${product.name.length > 30 ? product.name.substring(0, 30) + '...' : product.name}</td>
+                    <td>${product.quantity.toLocaleString('de-DE')}</td>
+                    <td>${product.revenue.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
+                    <td>${product.percentage.toFixed(1)}%</td>
+                `;
+            });
+
+            // Import Status
+            const importStatusBody = document.getElementById('importStatusBody');
+            importStatusBody.innerHTML = '';
+            
+            if (dashboardData.import_status && dashboardData.import_status.length > 0) {
+                const lastImport = dashboardData.import_status[0];
+                const importData = [
+                    ['Datei', lastImport.filename],
+                    ['Import-Zeit', new Date(lastImport.import_date).toLocaleString('de-DE')],
+                    ['Zeilen verarbeitet', `${lastImport.imported_rows.toLocaleString('de-DE')}/${lastImport.total_rows.toLocaleString('de-DE')}`],
+                    ['Status', lastImport.status === 'SUCCESS' ? '✅ Erfolgreich' : '❌ Fehler'],
+                    ['Erfolgsrate', lastImport.success_rate.toFixed(1) + '%']
+                ];
+
+                importData.forEach(([label, value]) => {
+                    const row = importStatusBody.insertRow();
+                    row.innerHTML = `<td><strong>${label}</strong></td><td>${value}</td>`;
+                });
+            } else {
+                const row = importStatusBody.insertRow();
+                row.innerHTML = '<td colspan="2">Keine Import-Daten verfügbar</td>';
+            }
+        }
+
+        // Initial load
+        loadData();
+
+        // Auto-refresh alle 30 Sekunden
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>

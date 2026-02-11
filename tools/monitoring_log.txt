@@ -1,0 +1,1000 @@
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5215 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 12:40:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 12:50:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5219 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5212 ms: Connection timed out)
+
+2026-02-01 13:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5210 ms: Connection timed out)
+
+2026-02-01 13:10:24
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5215 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5214 ms: Connection timed out)
+
+2026-02-01 13:20:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5210 ms: Connection timed out)
+
+2026-02-01 13:30:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 13:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5215 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5214 ms: Connection timed out)
+
+2026-02-01 13:50:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 14:00:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5215 ms: Connection timed out)
+
+2026-02-01 14:10:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5215 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5215 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-01 14:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5212 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5215 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5215 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 14:30:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5208 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 14:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5203 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 14:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5210 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5215 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5201 ms: Connection timed out)
+
+2026-02-01 15:00:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5227 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-01 15:10:24
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5212 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5215 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5215 ms: Connection timed out)
+
+2026-02-01 15:20:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5210 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5211 ms: Connection timed out)
+
+2026-02-01 15:30:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5216 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5212 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5212 ms: Connection timed out)
+
+2026-02-01 15:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5212 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-01 15:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-01 16:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5212 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5214 ms: Connection timed out)
+
+2026-02-01 16:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5210 ms: Connection timed out)
+
+2026-02-01 16:20:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5210 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 16:30:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5214 ms: Connection timed out)
+
+2026-02-01 16:40:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-01 16:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5212 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5210 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-01 17:00:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5215 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-01 17:10:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5203 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-01 17:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5216 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5215 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-01 17:30:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5212 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5215 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5212 ms: Connection timed out)
+
+2026-02-01 17:40:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5203 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5216 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5213 ms: Connection timed out)
+
+2026-02-01 17:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5201 ms: Connection timed out)
+
+2026-02-01 18:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5208 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-01 18:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5203 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 18:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5215 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 18:30:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5216 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5201 ms: Connection timed out)
+
+2026-02-01 18:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5210 ms: Connection timed out)
+
+2026-02-01 18:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 19:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5222 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5201 ms: Connection timed out)
+
+2026-02-01 19:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5210 ms: Connection timed out)
+
+2026-02-01 19:20:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-01 19:30:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5216 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 19:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 19:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5212 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 20:00:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-01 20:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5212 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5215 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-01 20:20:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5210 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-01 20:30:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5215 ms: Connection timed out)
+
+2026-02-01 20:40:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-01 20:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5212 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 21:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5202 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 21:10:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5203 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5201 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 21:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 21:30:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5216 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-01 21:40:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5202 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-01 21:50:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5210 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-01 22:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5212 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5215 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5212 ms: Connection timed out)
+
+2026-02-01 22:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5210 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5213 ms: Connection timed out)
+
+2026-02-01 22:20:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5212 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5204 ms: Connection timed out)
+
+2026-02-01 22:30:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5201 ms: Connection timed out)
+
+2026-02-01 22:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-01 22:50:24
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5215 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5210 ms: Connection timed out)
+
+2026-02-01 23:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5202 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5210 ms: Connection timed out)
+
+2026-02-01 23:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-01 23:20:24
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5218 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-01 23:30:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5213 ms: Connection timed out)
+
+2026-02-01 23:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5215 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5213 ms: Connection timed out)
+
+2026-02-01 23:50:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 00:00:29
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5211 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 00:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 00:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5202 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5212 ms: Connection timed out)
+
+2026-02-02 00:30:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5215 ms: Connection timed out)
+
+2026-02-02 00:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 00:50:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5203 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5201 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 01:00:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5211 ms: Connection timed out)
+
+2026-02-02 01:10:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5201 ms: Connection timed out)
+
+2026-02-02 01:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5202 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 01:30:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 01:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5210 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 01:50:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5212 ms: Connection timed out)
+
+2026-02-02 02:00:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5212 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-02 02:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5210 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5215 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5201 ms: Connection timed out)
+
+2026-02-02 02:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5214 ms: Connection timed out)
+
+2026-02-02 02:30:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5213 ms: Connection timed out)
+
+2026-02-02 02:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 02:50:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-02 03:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5216 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5215 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 03:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5212 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5215 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 03:20:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5200 ms: Connection timed out)
+
+2026-02-02 03:30:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5208 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5201 ms: Connection timed out)
+
+2026-02-02 03:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 03:50:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5212 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 04:00:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 04:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5212 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 04:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5201 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 04:30:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 04:40:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5203 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 04:50:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5203 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 05:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5216 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5215 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 05:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5212 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5215 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5214 ms: Connection timed out)
+
+2026-02-02 05:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 05:30:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5212 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-02 05:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5202 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5214 ms: Connection timed out)
+
+2026-02-02 05:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5217 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5212 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 06:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 06:10:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5210 ms: Connection timed out)
+
+2026-02-02 06:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5208 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 06:30:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 06:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 06:50:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 07:00:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5203 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5215 ms: Connection timed out)
+
+2026-02-02 07:10:24
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5210 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 07:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 07:30:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5215 ms: Connection timed out)
+
+2026-02-02 07:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5203 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5213 ms: Connection timed out)
+
+2026-02-02 07:50:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5204 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5212 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 08:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5210 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 08:10:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 08:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5218 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 08:30:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5201 ms: Connection timed out)
+
+2026-02-02 08:40:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 08:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5202 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 09:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5207 ms: Connection timed out)
+
+2026-02-02 09:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 09:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5208 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5213 ms: Connection timed out)
+
+2026-02-02 09:30:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5211 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5214 ms: Connection timed out)
+
+2026-02-02 09:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5207 ms: Connection timed out)
+
+2026-02-02 09:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5212 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 10:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5212 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5219 ms: Connection timed out)
+
+2026-02-02 10:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-02 10:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5203 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 10:30:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5212 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 10:40:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5212 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5213 ms: Connection timed out)
+
+2026-02-02 10:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 11:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 11:10:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 11:20:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5210 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 11:30:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5201 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 11:40:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 11:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5203 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-02 12:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5212 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5329 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5211 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 12:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 12:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5264 ms: Connection timed out)
+
+2026-02-02 12:30:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5202 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 12:40:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5210 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 12:50:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 13:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5212 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5215 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 13:10:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5208 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 13:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 13:30:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5210 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 13:40:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5209 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5204 ms: Connection timed out)
+
+2026-02-02 13:50:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 14:00:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5204 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5208 ms: Connection timed out)
+
+2026-02-02 14:10:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 14:20:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5212 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 14:30:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5213 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5201 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5213 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 14:40:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5211 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+
+2026-02-02 14:50:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 15:00:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5215 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5212 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 15:10:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5208 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 15:20:25
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5214 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 15:30:27
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5215 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5213 ms: Connection timed out)
+
+2026-02-02 15:40:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5209 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5210 ms: Connection timed out)
+
+2026-02-02 15:50:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5209 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5208 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5202 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5209 ms: Connection timed out)
+
+2026-02-02 16:00:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
+
+2026-02-02 16:10:26
+WebCam: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8088 after 5210 ms: Connection timed out)
+FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5213 ms: Connection timed out)
+Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5208 ms: Connection timed out)
+MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5203 ms: Connection timed out)
+

@@ -1,0 +1,89 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+body { font-family: 'Open Sans', sans-serif;
+font-size: 1.3vw;}
+
+h1 {
+  color: white;
+	background-color: #007a96;
+}
+
+.copy {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12px;
+	font-weight: 700;
+	color: #222222;
+}
+
+
+.legende {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12px;
+	font-weight: 300;
+	color: #ffffff;
+}
+
+.success {
+
+	font-family: 'Open Sans', sans-serif;
+	font-size: 10 em;
+	font-weight: 700;
+	color: #00bb00;
+}
+.error {
+
+	font-family: 'Open Sans', sans-serif;
+	font-size: 10 em;
+	font-weight: 700;
+	color: red;
+}
+
+.tp_legende {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1.3vw;
+	font-weight: 400;
+	color: black;
+	
+}
+
+
+.tp_legende_small {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1vw;
+	font-weight: 400;
+	color: black;
+	
+}
+
+.tp_value {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 2.5vw;
+	font-weight: 700;
+	color: teal;
+	
+}
+
+.tp_value_small {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1.8vw;
+	font-weight: 700;
+	color: teal;
+	
+}
+
+.tp_value_text {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1.1vw;
+	font-weight: 700;
+	color: teal;
+	
+}
+
+hr {
+    width:70%;
+    margin:0;
+
+}
+

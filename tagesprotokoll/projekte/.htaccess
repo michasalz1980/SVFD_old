@@ -1,0 +1,23 @@
+# Cache-Kontrolle für statische Dateien
+<IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresDefault "access plus 1 month"
+    <FilesMatch "\.(css|js|jpg|jpeg|png|gif)$">
+        ExpiresDefault "access plus 1 year"
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+    # Komprimierung einschalten
+    SetOutputFilter DEFLATE
+
+    # Komprimierbare Dateitypen festlegen
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/css application/javascript application/x-javascript
+
+    # Ausnahmen für veraltete Browser
+    <IfModule mod_setenvif.c>
+        BrowserMatch ^Mozilla/4 gzip-only-text/html
+        BrowserMatch ^Mozilla/4\.0[678] no-gzip
+        BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    </IfModule>
+</IfModule>

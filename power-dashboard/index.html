@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freibad Dabringhausen - Stromdaten Monitoring</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/4.1.0/cdn.min.js"></script>
+    <link rel="stylesheet" href="power-styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="header">
+        <h1>⚡ Freibad Dabringhausen</h1>
+        <div class="subtitle">Stromdaten-Monitoring System <span id="version-info" class="version-badge">v1.1.3</span></div>
+    </div>
+
+    <div class="container">
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-label">Gesamtleistung</div>
+                <div class="status-value" id="current-total-power">--<span class="status-unit">W</span></div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Gerätestatus</div>
+                <div class="status-value" id="operation-status">--<span class="status-unit"></span></div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Temperatur</div>
+                <div class="status-value" id="current-temperature">--<span class="status-unit">°C</span></div>
+            </div>
+            <div class="last-update" id="last-update">
+                Letzte Aktualisierung: --
+            </div>
+        </div>
+
+        <!-- Neue Energie-Status-Bar -->
+        <div class="energy-status-bar">
+            <div class="energy-item">
+                <div class="energy-label">🔋 Gesamtenergie</div>
+                <div class="energy-value" id="total-energy">--<span class="energy-unit">MWh</span></div>
+            </div>
+            <div class="energy-item">
+                <div class="energy-label">📅 Monatsertrag (berechnet)</div>
+                <div class="energy-value" id="monthly-energy">--<span class="energy-unit">kWh</span></div>
+            </div>
+            <div class="energy-item">
+                <div class="energy-label">☀️ Heute produziert</div>
+                <div class="energy-value" id="daily-energy">--<span class="energy-unit">kWh</span></div>
+            </div>
+            <div class="energy-item">
+                <div class="energy-label">💰 Heute gespart</div>
+                <div class="energy-value" id="daily-savings">--<span class="energy-unit">€</span></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="time-selector">
+                <span style="margin-right: 1rem; color: #666;">Zeitraum:</span>
+                <button class="time-btn active" onclick="changeTimeRange('1h')">1 Stunde</button>
+                <button class="time-btn" onclick="changeTimeRange('6h')">6 Stunden</button>
+                <button class="time-btn" onclick="changeTimeRange('24h')">24 Stunden</button>
+                <button class="time-btn" onclick="changeTimeRange('7d')">7 Tage</button>
+                <button class="time-btn" onclick="changeTimeRange('30d')">1 Monat</button>
+                <button class="time-btn" onclick="changeTimeRange('1y')">1 Jahr</button>
+            </div>
+            <div class="control-buttons">
+                <button class="info-btn" onclick="toggleSystemInfo()" title="System-Informationen">
+                    📊 Info
+                </button>
+                <button class="refresh-btn" onclick="refreshData()">🔄 Aktualisieren</button>
+            </div>
+        </div>
+
+        <!-- System-Informationen Panel -->
+        <div id="systemInfoPanel" class="system-info-panel" style="display: none;">
+            <div class="system-info-header">
+                <h3>⚡ System-Informationen</h3>
+                <button class="close-btn" onclick="toggleSystemInfo()">✖️</button>
+            </div>
+            <div class="system-info-content">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Version</div>
+                        <div class="info-value" id="system-version">v1.1.3</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Erste Messung</div>
+                        <div class="info-value" id="first-measurement">--</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">System läuft seit</div>
+                        <div class="info-value" id="system-uptime">--</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Letzte Aktualisierung</div>
+                        <div class="info-value" id="last-api-call">--</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Gesamtenergie</div>
+                        <div class="info-value" id="total-energy-info">--</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Gerätestatus</div>
+                        <div class="info-value" id="device-status">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="alerts"></div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3 class="chart-title">⚡ Gesamtleistung</h3>
+                <div class="chart-wrapper">
+                    <canvas id="totalPowerChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">🔌 Phasen-Verteilung</h3>
+                <div class="chart-wrapper">
+                    <canvas id="phasePowerChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">🔋 Energie-Produktion (berechnet)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="energyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">🌡️ Temperatur-Verlauf</h3>
+                <div class="chart-wrapper">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daten-Tabelle Sektion -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3 class="table-title">📋 Stromdaten-Verlauf</h3>
+                <div class="table-controls">
+                    <select id="entriesPerPage" class="entries-select">
+                        <option value="10">10 Einträge</option>
+                        <option value="25" selected>25 Einträge</option>
+                        <option value="50">50 Einträge</option>
+                        <option value="100">100 Einträge</option>
+                    </select>
+                    <button class="export-btn" onclick="exportTableData()">📊 Export CSV</button>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table id="dataTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)" class="sortable">
+                                📅 Datum/Zeit
+                                <span class="sort-icon">⇅</span>
+                            </th>
+                            <th onclick="sortTable(1)" class="sortable">
+                                ⚡ Gesamtleistung
+                                <span class="sort-icon">⇅</span>
+                            </th>
+                            <th onclick="sortTable(2)" class="sortable">
+                                🔧 Gerätestatus
+                                <span class="sort-icon">⇅</span>
+                            </th>
+                            <th onclick="sortTable(3)" class="sortable">
+                                🌡️ Temperatur
+                                <span class="sort-icon">⇅</span>
+                            </th>
+                            <th onclick="sortTable(4)" class="sortable">
+                                📅 Tagesertrag
+                                <span class="sort-icon">⇅</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr>
+                            <td colspan="5" class="loading-row">
+                                <div class="loading">Lade Daten...</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-pagination">
+                <div class="pagination-info" id="paginationInfo">
+                    Zeige 0 - 0 von 0 Einträgen
+                </div>
+                <div class="pagination-controls">
+                    <button class="page-btn" id="firstPageBtn" onclick="goToPage(1)" disabled>⏮️</button>
+                    <button class="page-btn" id="prevPageBtn" onclick="goToPage(currentPage - 1)" disabled>◀️</button>
+                    <span class="page-numbers" id="pageNumbers"></span>
+                    <button class="page-btn" id="nextPageBtn" onclick="goToPage(currentPage + 1)" disabled>▶️</button>
+                    <button class="page-btn" id="lastPageBtn" onclick="goToPage(totalPages)" disabled>⏭️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="power-scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Logs
+**/logs/
+**/*.log
+
+# Cache/tmp
+**/tmp/
+**/cache/
+
+# Environment/Secrets
+**/.env
+**/.env.*
+
+# OS/Editor
+.DS_Store
+Thumbs.db
