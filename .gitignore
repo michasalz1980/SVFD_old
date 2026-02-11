@@ -9,6 +9,11 @@
 # Environment/Secrets
 **/.env
 **/.env.*
+**/.htpasswd
+
+# Data archives (excluded for size/sensitivity)
+finanzen/dataCheckout/csv_archive/
+tagesprotokoll/projekte/rechnungen/
 
 # OS/Editor
 .DS_Store
