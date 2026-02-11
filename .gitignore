@@ -15,6 +15,9 @@
 finanzen/dataCheckout/csv_archive/
 tagesprotokoll/projekte/rechnungen/
 
+# Large third-party bundles
+jobs/python/modules/
+
 # OS/Editor
 .DS_Store
 Thumbs.db
