@@ -7,7 +7,10 @@ import sys
 from datetime import datetime
 from typing import Any, Dict, List
 
-from pytz import timezone
+try:
+    from zoneinfo import ZoneInfo
+except ImportError:  # pragma: no cover
+    ZoneInfo = None
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(SCRIPT_DIR, "modules"))
@@ -102,7 +105,12 @@ def read_counter(client: ModbusClient, register_configs: List[Dict[str, Any]]) -
 
 def main() -> int:
     print_headers()
-    de_timezone = timezone("Europe/Berlin")
+    de_timezone = None
+    if ZoneInfo is not None:
+        try:
+            de_timezone = ZoneInfo("Europe/Berlin")
+        except Exception:  # pylint: disable=broad-except
+            de_timezone = None
 
     try:
         config = load_config()
@@ -158,7 +166,7 @@ def main() -> int:
                     f"COUNTER_WARNING: current={counter_value}, previous={previous_counter}, reason={reason}"
                 )
 
-            now_de = datetime.now(de_timezone).replace(second=0, microsecond=0)
+            now_de = datetime.now(de_timezone).replace(second=0, microsecond=0) if de_timezone else datetime.now().replace(second=0, microsecond=0)
             source = "sensor"
             sql = (
                 "INSERT INTO ffd_frischwasser (datetime, counter, consumption, source) "
