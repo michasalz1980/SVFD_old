@@ -1,109 +1,307 @@
 <?php
+declare(strict_types=1);
 
-// Konfiguration
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+
 $resources = [
     'WebCam' => 'https://iykjlt0jy435sqad.myfritz.net:8088',
     'FritzBox' => 'https://iykjlt0jy435sqad.myfritz.net',
     'Wechselrichter' => 'https://iykjlt0jy435sqad.myfritz.net:8086',
-    'MBUS Gateway' => 'http://iykjlt0jy435sqad.myfritz.net:8089'
+    'MBUS Gateway' => 'http://iykjlt0jy435sqad.myfritz.net:8089',
 ];
 
-$sendMailAlways = false; // true = immer Mail schicken, false = nur bei Fehler
-$mailTo = 'michasalz@gmail.com';
-$mailFrom = 'info@freibad-dabringhausen.de';
-$logFile = __DIR__ . '/monitoring_log.txt';
-$maxLogLines = 1000; // maximale Anzahl an Zeilen im Logfile
+$config = [
+    'per_resource_connect_timeout' => 2,
+    'per_resource_timeout' => 6,
+    'ssl_verify_peer' => false,
+    'ssl_verify_host' => false,
+    'send_mail_always' => false,
+    'send_mail_on_error' => true,
+    'mail_cooldown_seconds' => 3600,
+    'mail_to' => 'michasalz@gmail.com',
+    'mail_from' => 'info@freibad-dabringhausen.de',
+    'log_file' => __DIR__ . '/monitoring_log.txt',
+    'state_file' => __DIR__ . '/monitoring_state.json',
+    'max_log_lines' => 1000,
+];
 
-// Funktion: Status abrufen
-function checkResource($url)
+function asBool(mixed $value): bool
 {
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_NOBODY, true); // Nur Header
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
-    $result = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error = curl_error($ch);
-
-    curl_close($ch);
-
-    if ($error && strpos($error, 'certificate subject name') === false) {
-        return ['status' => 'Error', 'detail' => $error];
-    }
-
-    return ['status' => ($httpCode >= 200 && $httpCode < 400) ? 'OK' : 'Error', 'detail' => 'HTTP ' . $httpCode];
+    return filter_var($value, FILTER_VALIDATE_BOOLEAN);
 }
 
-// Monitoring ausführen
-$results = [];
-$hasError = false;
-foreach ($resources as $name => $url) {
-    $status = checkResource($url);
-    if ($status['status'] === 'Error') {
-        $hasError = true;
+function normalizeStatus(int $httpCode, string $curlError): string
+{
+    if ($curlError !== '') {
+        return 'Error';
     }
-    $results[$name] = [
-        'url' => $url,
-        'status' => $status['status'],
-        'detail' => $status['detail']
+    return ($httpCode >= 200 && $httpCode < 400) ? 'OK' : 'Error';
+}
+
+function checkResourcesParallel(array $resources, array $config): array
+{
+    $results = [];
+
+    if (!function_exists('curl_multi_init') || !function_exists('curl_init')) {
+        foreach ($resources as $name => $url) {
+            $results[$name] = [
+                'url' => $url,
+                'status' => 'Error',
+                'detail' => 'cURL extension missing',
+                'http_code' => 0,
+                'duration_ms' => 0,
+            ];
+        }
+        return $results;
+    }
+
+    $multi = curl_multi_init();
+    $handles = [];
+
+    foreach ($resources as $name => $url) {
+        $ch = curl_init($url);
+        if ($ch === false) {
+            $results[$name] = [
+                'url' => $url,
+                'status' => 'Error',
+                'detail' => 'curl_init failed',
+                'http_code' => 0,
+                'duration_ms' => 0,
+            ];
+            continue;
+        }
+
+        $options = [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_NOBODY => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 3,
+            CURLOPT_CONNECTTIMEOUT => (int) $config['per_resource_connect_timeout'],
+            CURLOPT_TIMEOUT => (int) $config['per_resource_timeout'],
+            CURLOPT_SSL_VERIFYPEER => asBool($config['ssl_verify_peer']),
+            CURLOPT_SSL_VERIFYHOST => asBool($config['ssl_verify_host']) ? 2 : 0,
+            CURLOPT_USERAGENT => 'SVFD-ServiceMonitoring/2',
+        ];
+        curl_setopt_array($ch, $options);
+
+        curl_multi_add_handle($multi, $ch);
+        $handles[(int) $ch] = [
+            'name' => $name,
+            'url' => $url,
+            'handle' => $ch,
+            'started_at' => microtime(true),
+        ];
+    }
+
+    if (count($handles) > 0) {
+        $running = null;
+        do {
+            $status = curl_multi_exec($multi, $running);
+            if ($running > 0 && $status === CURLM_OK) {
+                curl_multi_select($multi, 1.0);
+            }
+        } while ($running > 0 && $status === CURLM_OK);
+    }
+
+    foreach ($handles as $meta) {
+        $ch = $meta['handle'];
+        $curlError = curl_error($ch);
+        $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $durationMs = (int) round((microtime(true) - $meta['started_at']) * 1000);
+        $status = normalizeStatus($httpCode, $curlError);
+        $detail = ($curlError !== '') ? $curlError : ('HTTP ' . $httpCode);
+
+        $results[$meta['name']] = [
+            'url' => $meta['url'],
+            'status' => $status,
+            'detail' => $detail,
+            'http_code' => $httpCode,
+            'duration_ms' => $durationMs,
+        ];
+
+        curl_multi_remove_handle($multi, $ch);
+        curl_close($ch);
+    }
+
+    curl_multi_close($multi);
+    ksort($results);
+
+    return $results;
+}
+
+function loadState(string $stateFile): array
+{
+    if (!is_file($stateFile)) {
+        return [];
+    }
+    $json = @file_get_contents($stateFile);
+    if ($json === false || $json === '') {
+        return [];
+    }
+    $data = json_decode($json, true);
+    return is_array($data) ? $data : [];
+}
+
+function saveState(string $stateFile, array $state): void
+{
+    @file_put_contents($stateFile, json_encode($state, JSON_UNESCAPED_SLASHES), LOCK_EX);
+}
+
+function shouldSendMail(bool $hasError, array $config, array $state): bool
+{
+    if (asBool($config['send_mail_always'])) {
+        return true;
+    }
+    if (!asBool($config['send_mail_on_error']) || !$hasError) {
+        return false;
+    }
+
+    $now = time();
+    $lastMailTs = isset($state['last_mail_ts']) ? (int) $state['last_mail_ts'] : 0;
+    $lastHasError = isset($state['last_has_error']) ? asBool($state['last_has_error']) : false;
+    $cooldown = (int) $config['mail_cooldown_seconds'];
+
+    if (!$lastHasError) {
+        return true;
+    }
+
+    return ($now - $lastMailTs) >= $cooldown;
+}
+
+function buildHtml(array $payload): string
+{
+    $rows = [];
+    foreach ($payload['resources'] as $name => $data) {
+        $color = ($data['status'] === 'OK') ? 'green' : 'red';
+        $rows[] = sprintf(
+            "<tr><td>%s</td><td><a href='%s' target='_blank' rel='noopener noreferrer'>%s</a></td><td style='color:%s'>%s</td><td>%s</td><td>%d</td></tr>",
+            htmlspecialchars((string) $name, ENT_QUOTES),
+            htmlspecialchars((string) $data['url'], ENT_QUOTES),
+            htmlspecialchars((string) $data['url'], ENT_QUOTES),
+            $color,
+            htmlspecialchars((string) $data['status'], ENT_QUOTES),
+            htmlspecialchars((string) $data['detail'], ENT_QUOTES),
+            (int) $data['duration_ms']
+        );
+    }
+
+    return
+        "<h2>SVFD Service Monitoring</h2>" .
+        "<p>Status: <strong>" . htmlspecialchars((string) $payload['overall_status'], ENT_QUOTES) . "</strong> | " .
+        "checked_at: " . htmlspecialchars((string) $payload['checked_at'], ENT_QUOTES) . " | " .
+        "duration_ms: " . (int) $payload['duration_ms'] . "</p>" .
+        "<table border='1' cellpadding='5' cellspacing='0'>" .
+        "<tr><th>Ressource</th><th>URL</th><th>Status</th><th>Detail</th><th>Dauer (ms)</th></tr>" .
+        implode('', $rows) .
+        "</table>";
+}
+
+function appendLogLine(string $logFile, int $maxLogLines, array $payload): void
+{
+    $line = json_encode($payload, JSON_UNESCAPED_SLASHES) . PHP_EOL;
+    if ($line === false) {
+        return;
+    }
+
+    @file_put_contents($logFile, $line, FILE_APPEND | LOCK_EX);
+
+    $content = @file($logFile);
+    if (!is_array($content)) {
+        return;
+    }
+
+    if (count($content) > $maxLogLines) {
+        $content = array_slice($content, -$maxLogLines);
+        @file_put_contents($logFile, implode('', $content), LOCK_EX);
+    }
+}
+
+function writeJsonResponse(array $payload, int $statusCode = 200): void
+{
+    if (!headers_sent()) {
+        header('Content-Type: application/json; charset=UTF-8');
+        http_response_code($statusCode);
+    }
+    echo json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+}
+
+try {
+    $scriptStartedAt = microtime(true);
+    $results = checkResourcesParallel($resources, $config);
+    $totalDurationMs = (int) round((microtime(true) - $scriptStartedAt) * 1000);
+
+    $okCount = 0;
+    $errorCount = 0;
+    foreach ($results as $data) {
+        if ($data['status'] === 'OK') {
+            $okCount++;
+        } else {
+            $errorCount++;
+        }
+    }
+    $hasError = $errorCount > 0;
+
+    $payload = [
+        'overall_status' => $hasError ? 'degraded' : 'ok',
+        'checked_at' => gmdate('c'),
+        'duration_ms' => $totalDurationMs,
+        'summary' => [
+            'resource_count' => count($results),
+            'ok_count' => $okCount,
+            'error_count' => $errorCount,
+        ],
+        'resources' => $results,
     ];
-}
 
-// Ausgabe vorbereiten
-ob_start();
-echo "<table border='1' cellpadding='5' cellspacing='0'>";
-echo "<tr><th>Ressource</th><th>URL</th><th>Status</th><th>Detail</th></tr>";
-foreach ($results as $name => $data) {
-    $color = ($data['status'] === 'OK') ? 'green' : 'red';
-    echo "<tr>";
-    echo "<td>{$name}</td>";
-    echo "<td><a href='{$data['url']}' target='_blank'>{$data['url']}</a></td>";
-    echo "<td style='color: {$color};'>{$data['status']}</td>";
-    echo "<td>{$data['detail']}</td>";
-    echo "</tr>";
-}
-echo "</table>";
-$htmlOutput = ob_get_clean();
+    $state = loadState((string) $config['state_file']);
+    $mailAttempted = shouldSendMail($hasError, $config, $state);
+    $mailSent = false;
 
-// Logs schreiben
-$logEntry = date('Y-m-d H:i:s') . "\n";
-foreach ($results as $name => $data) {
-    $logEntry .= "{$name}: {$data['status']} ({$data['detail']})\n";
-}
-$logEntry .= "\n";
-file_put_contents($logFile, $logEntry, FILE_APPEND);
+    if ($mailAttempted) {
+        $subjectPrefix = $hasError ? '#SVFD | Monitoring Fehler erkannt' : 'SVFD | Monitoring Status OK';
+        $subject = $subjectPrefix . ' - ' . date('Y-m-d H:i:s');
+        $headers = "MIME-Version: 1.0\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8\r\n";
+        $headers .= "From: " . $config['mail_from'] . "\r\n";
+        $mailSent = @mail((string) $config['mail_to'], $subject, buildHtml($payload), $headers);
+    }
 
-// Logfile auf max. $maxLogLines begrenzen
-$logContent = file($logFile);
-if (count($logContent) > $maxLogLines) {
-    $logContent = array_slice($logContent, -$maxLogLines);
-    file_put_contents($logFile, implode('', $logContent));
-}
+    $state['last_has_error'] = $hasError;
+    $state['last_checked_at'] = date('c');
+    if ($mailSent) {
+        $state['last_mail_ts'] = time();
+    }
+    saveState((string) $config['state_file'], $state);
 
-// Mail verschicken, wenn nötig
-if ($sendMailAlways || $hasError) {
-    $timestamp = date('Y-m-d H:i:s');
-    $subject = ($hasError ? '#SVFD | Monitoring Fehler erkannt' : 'SVFD | Monitoring Status OK') . " - {$timestamp}";
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= "From: {$mailFrom}" . "\r\n";
+    $payload['mail'] = [
+        'attempted' => $mailAttempted,
+        'sent' => $mailSent,
+    ];
 
-    mail($mailTo, $subject, $htmlOutput, $headers);
-}
+    appendLogLine((string) $config['log_file'], (int) $config['max_log_lines'], $payload);
 
-// Ausgabe auf der Seite
-echo $htmlOutput;
+    $format = $_GET['format'] ?? '';
+    if ($format === 'html') {
+        if (!headers_sent()) {
+            header('Content-Type: text/html; charset=UTF-8');
+            http_response_code(200);
+        }
+        echo buildHtml($payload);
+    } else {
+        writeJsonResponse($payload, 200);
+    }
 
-// Exit Code setzen
-if ($hasError) {
+    exit($hasError ? 1 : 0);
+} catch (Throwable $e) {
+    $payload = [
+        'overall_status' => 'error',
+        'checked_at' => gmdate('c'),
+        'error' => 'service_monitoring_runtime_error',
+        'detail' => $e->getMessage(),
+    ];
+
+    @error_log('serviceMonitoring.php failed: ' . $e->getMessage());
+    writeJsonResponse($payload, 500);
     exit(1);
-} else {
-    exit(0);
 }
-/*
-NEXT: Repeater, Frischwasserzähler, aufnehmen
-*/
-?>
