@@ -33,6 +33,7 @@ try:
     from pyModbusTCP.client import ModbusClient
     import pymysql.cursors
     import struct
+    from counter_safety_utils import calculate_safe_consumption
 except ImportError as e:
     print(f"FEHLER: Erforderliche Module nicht verfügbar: {e}")
     raise ScriptExit(1, f"Import-Fehler: {e}")
@@ -511,12 +512,22 @@ def insert_database_data(data_to_insert):
                 # Fallback: PV-Tabelle (bestehende Logik)
                 cursor.execute("SELECT counter FROM ffd_pv ORDER BY id DESC LIMIT 1")
                 last_counter = cursor.fetchone()
-                if last_counter:
-                    consumption = data_to_insert.get("counter", 0) - last_counter["counter"]
-                else:
-                    consumption = 0
-                
+                consumption, normalized_counter, counter_warnings = calculate_safe_consumption(
+                    data_to_insert.get("counter"),
+                    last_counter
+                )
+                data_to_insert["counter"] = normalized_counter
                 data_to_insert["consumption"] = consumption
+
+                for warning in counter_warnings:
+                    log_message(
+                        (
+                            "COUNTER_WARNING: "
+                            f"{warning}, current={data_to_insert.get('counter')}, "
+                            f"previous_row={last_counter}"
+                        ),
+                        "WARNING"
+                    )
                 
                 sql = """
                 INSERT INTO ffd_pv 
