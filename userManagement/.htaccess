@@ -81,7 +81,8 @@ RewriteRule ^ - [L]
 
 # Spezielle Freibad-Routen
 RewriteRule ^login/?$ login.php [L]
-RewriteRule ^logout/?$ login.php?logout=1 [L,QSA]
+RewriteRule ^login-error/?$ login_error.php [L,QSA]
+RewriteRule ^logout/?$ logout.php [L,QSA]
 RewriteRule ^dashboard/?$ dashboard.php [L]
 RewriteRule ^admin/?$ admin.php [L]
 

@@ -6,9 +6,22 @@ require_once 'auth_freibad.php';
 
 $auth = new FreibadDabringhausenAuth();
 
+function sanitizeRedirectTarget(string $target): string {
+    if ($target === '') {
+        return '/dashboard';
+    }
+    if (preg_match('#^https?://#i', $target)) {
+        return '/dashboard';
+    }
+    if ($target[0] !== '/') {
+        return '/dashboard';
+    }
+    return $target;
+}
+
 // Bereits angemeldet? Weiterleitung
 if ($auth->isLoggedIn()) {
-    $redirect = $_GET['redirect'] ?? '/dashboard';
+    $redirect = sanitizeRedirectTarget((string) ($_GET['redirect'] ?? '/dashboard'));
     header('Location: ' . $redirect);
     exit;
 }
@@ -19,20 +32,21 @@ if (isset($_GET['logout'])) {
     $logoutMessage = 'Sie wurden erfolgreich abgemeldet.';
 }
 
-$loginError = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
+    $redirect = sanitizeRedirectTarget((string) ($_GET['redirect'] ?? '/dashboard'));
     
     if (empty($username) || empty($password)) {
-        $loginError = 'Bitte geben Sie Benutzername und Passwort ein.';
+        header('Location: /userManagement/login_error.php?reason=empty&redirect=' . urlencode($redirect));
+        exit;
     } else {
         if ($auth->authenticate($username, $password)) {
-            $redirect = $_GET['redirect'] ?? '/dashboard';
             header('Location: ' . $redirect);
             exit;
         } else {
-            $loginError = 'Benutzername oder Passwort falsch.';
+            header('Location: /userManagement/login_error.php?reason=invalid&redirect=' . urlencode($redirect));
+            exit;
         }
     }
 }
@@ -308,10 +322,6 @@ $seasonInfo = $auth->getSeasonInfo();
         
         <?php if (isset($logoutMessage)): ?>
             <div class="success"><?= htmlspecialchars($logoutMessage) ?></div>
-        <?php endif; ?>
-        
-        <?php if ($loginError): ?>
-            <div class="error">❌ <?= htmlspecialchars($loginError) ?></div>
         <?php endif; ?>
         
         <form method="POST" autocomplete="on">

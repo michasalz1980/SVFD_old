@@ -34,7 +34,7 @@ if (empty($fullPath) || $fullPath === 'public' || strpos($fullPath, 'public/') =
 if (!$auth->isLoggedIn()) {
     // Nicht angemeldet - zur Login-Seite weiterleiten
     $redirectUrl = $_SERVER['REQUEST_URI'];
-    header('Location: /login?redirect=' . urlencode($redirectUrl));
+    header('Location: /userManagement/login.php?redirect=' . urlencode($redirectUrl));
     exit;
 }
 
@@ -196,13 +196,6 @@ function handleTechnicalArea($area, $file, $user) {
  * Finanz-Bereich
  */
 function handleFinanceArea($file, $user) {
-    // Zusätzliche Sicherheit für Finanzbereich
-    if (!in_array($user['role'], ['kassenwart', 'vorstand', 'admin'])) {
-        http_response_code(403);
-        showErrorPage(403, 'Zugriff verweigert', 'Nur Kassenwart, Vorstand und Admin haben Zugriff auf Finanzdaten.');
-        return;
-    }
-    
     $basePath = "protected/finanzen/";
     
     if (empty($file)) {
@@ -229,12 +222,6 @@ function handleBoardArea($file, $user) {
  * Admin-Bereich
  */
 function handleAdminArea($file, $user) {
-    if ($user['role'] !== 'admin') {
-        http_response_code(403);
-        showErrorPage(403, 'Zugriff verweigert', 'Nur Administratoren haben Zugriff auf diesen Bereich.');
-        return;
-    }
-    
     if (empty($file)) {
         // Weiterleitung zur Admin-Seite
         header('Location: /admin.php');

@@ -206,26 +206,8 @@ class FreibadDabringhausenAuth {
     }
     
     public function checkAccess($path) {
-        // Öffentliche Bereiche
-        if (strpos($path, 'public/') === 0 || $path === 'public' || $path === '') {
-            return true;
-        }
-        
-        if (!$this->isLoggedIn()) {
-            return false;
-        }
-        
-        $userRole = $_SESSION['role'];
-        $permissions = $this->loadPermissions();
-        
-        // Finde den entsprechenden Bereich
-        foreach ($permissions as $area => $allowedRoles) {
-            if (strpos($path, $area . '/') === 0 || $path === $area) {
-                return in_array($userRole, $allowedRoles);
-            }
-        }
-        
-        return false;
+        // Issue #8: Nach Login hat jeder Benutzer Vollzugriff.
+        return $this->isLoggedIn();
     }
     
     public function isLoggedIn() {
@@ -270,22 +252,16 @@ class FreibadDabringhausenAuth {
         if (!$this->isLoggedIn()) {
             return ['public'];
         }
-        
-        $userRole = $_SESSION['role'];
-        $permissions = $this->loadPermissions();
+
         $accessibleAreas = [];
-        
-        foreach ($permissions as $area => $allowedRoles) {
-            if (in_array($userRole, $allowedRoles)) {
-                $accessibleAreas[$area] = $this->freibadAreas[$area] ?? ucfirst($area);
-            }
+        foreach ($this->freibadAreas as $area => $label) {
+            $accessibleAreas[$area] = $label;
         }
-        
         return $accessibleAreas;
     }
     
     public function addUser($username, $password, $role, $name, $email, $department = '') {
-        if (!$this->isLoggedIn() || $_SESSION['role'] !== 'admin') {
+        if (!$this->isLoggedIn()) {
             return false;
         }
         
