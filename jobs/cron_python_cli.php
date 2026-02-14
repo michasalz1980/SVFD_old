@@ -18,6 +18,10 @@ $logFile = __DIR__ . '/logs/cronjob_runner.log';
 $lockFile = __DIR__ . '/locks/cronjob_runner.lock';
 $lastRunFile = __DIR__ . '/data/last_run_times.json';
 $maxExecutionTime = 300; // 5 Minuten max (da alle 5 Minuten aufgerufen)
+$executionMode = getenv('SVFD_CRON_RUNNER_MODE') ?: 'local_cli';
+$pythonBinary = getenv('SVFD_PYTHON_BIN') ?: 'python3';
+$maxRetriesPerScript = max(1, (int)(getenv('SVFD_CRON_MAX_RETRIES') ?: 2));
+$retryDelayMs = max(0, (int)(getenv('SVFD_CRON_RETRY_DELAY_MS') ?: 1000));
 
 // Python Scripts mit individuellen Intervallen (in Minuten)
 // Wenn interval_minutes = 0 oder nicht gesetzt: wird bei jedem Cron-Aufruf ausgeführt
@@ -25,24 +29,28 @@ $pythonScripts = [
     [
         'name' => 'Weather Data Collection',
         'url' => 'http://personal.freibad-dabringhausen.de/jobs/python/cgi_getWeatherToMySQL.py',
+        'path' => __DIR__ . '/python/cgi_getWeatherToMySQL.py',
         'timeout' => 60,
         'interval_minutes' => 5  // Alle 5 Minuten (= bei jedem Cron-Aufruf)
     ],
     [
         'name' => 'Solar Data Collection', 
         'url' => 'http://personal.freibad-dabringhausen.de/jobs/python/cgi_getSolarToMySQL.py',
+        'path' => __DIR__ . '/python/cgi_getSolarToMySQL.py',
         'timeout' => 60,
         'interval_minutes' => 5  // Alle 5 Minuten (= bei jedem Cron-Aufruf)
     ],
     [
         'name' => 'Water Data Collection',
         'url' => 'http://personal.freibad-dabringhausen.de/jobs/python/cgi_getWaterToMySQL.py', 
+        'path' => __DIR__ . '/python/cgi_getWaterToMySQL.py',
         'timeout' => 60,
         'interval_minutes' => 5  // Alle 5 Minuten (= bei jedem Cron-Aufruf)
     ],
     [
         'name' => 'Waste Water Data Collection',
         'url' => 'http://personal.freibad-dabringhausen.de/jobs/python/cgi_getWasteWaterToMySQL.py',
+        'path' => __DIR__ . '/python/cgi_getWasteWaterToMySQL.py',
         'timeout' => 60,
         'interval_minutes' => 5  // Alle 5 Minuten (= bei jedem Cron-Aufruf)
     ]
@@ -210,64 +218,232 @@ function shouldRunScript($script, $lastRuns) {
     return $shouldRun;
 }
 
-/**
- * Python Script via HTTP ausführen
- */
-function executeScript($script) {
+function trimLogOutput($value, $maxLength = 800) {
+    if (!is_string($value)) {
+        return $value;
+    }
+    $trimmed = trim($value);
+    if (strlen($trimmed) <= $maxLength) {
+        return $trimmed;
+    }
+    return substr($trimmed, -$maxLength);
+}
+
+function executeScriptHttp($script) {
     $startTime = microtime(true);
-    
-    writeLog('INFO', 'Starting script execution', [
-        'script' => $script['name'],
-        'url' => $script['url'],
-        'interval_minutes' => isset($script['interval_minutes']) ? $script['interval_minutes'] : 'always'
-    ]);
-    
-    // cURL für HTTP Request
+    $timeout = max(5, (int)($script['timeout'] ?? 60));
+
     $ch = curl_init();
     curl_setopt_array($ch, [
         CURLOPT_URL => $script['url'],
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT => $script['timeout'],
-        CURLOPT_CONNECTTIMEOUT => 15,
+        CURLOPT_TIMEOUT => $timeout,
+        CURLOPT_CONNECTTIMEOUT => min(15, $timeout),
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_USERAGENT => 'CLI-CronJob-Runner/2.1'
+        CURLOPT_USERAGENT => 'CLI-CronJob-Runner/3.0'
     ]);
-    
+
     $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $error = curl_error($ch);
+    $curlErrno = curl_errno($ch);
     curl_close($ch);
-    
-    $executionTime = round((microtime(true) - $startTime) * 1000); // in ms
-    
+
+    $executionTime = round((microtime(true) - $startTime) * 1000);
+
     if ($response === false || !empty($error)) {
-        writeLog('ERROR', 'Script execution failed', [
-            'script' => $script['name'],
-            'error' => $error,
-            'execution_time_ms' => $executionTime
-        ]);
-        return false;
+        return [
+            'success' => false,
+            'mode' => 'http',
+            'execution_time_ms' => $executionTime,
+            'error' => $error ?: 'unknown_curl_error',
+            'curl_errno' => $curlErrno
+        ];
     }
-    
+
     if ($httpCode !== 200) {
-        writeLog('ERROR', 'Script returned non-200 status', [
-            'script' => $script['name'],
+        return [
+            'success' => false,
+            'mode' => 'http',
+            'execution_time_ms' => $executionTime,
             'http_code' => $httpCode,
-            'response' => substr($response, 0, 500),
-            'execution_time_ms' => $executionTime
-        ]);
-        return false;
+            'response_tail' => trimLogOutput($response)
+        ];
     }
-    
-    writeLog('INFO', 'Script executed successfully', [
-        'script' => $script['name'],
-        'http_code' => $httpCode,
+
+    return [
+        'success' => true,
+        'mode' => 'http',
         'execution_time_ms' => $executionTime,
+        'http_code' => $httpCode,
         'response_length' => strlen($response)
+    ];
+}
+
+function executeScriptLocal($script) {
+    global $pythonBinary;
+
+    $startTime = microtime(true);
+    $timeout = max(5, (int)($script['timeout'] ?? 60));
+    $scriptPath = $script['path'] ?? null;
+
+    if (empty($scriptPath) || !is_file($scriptPath)) {
+        return [
+            'success' => false,
+            'mode' => 'local_cli',
+            'execution_time_ms' => round((microtime(true) - $startTime) * 1000),
+            'error' => 'script_path_missing_or_not_found',
+            'script_path' => $scriptPath
+        ];
+    }
+
+    if (!function_exists('proc_open')) {
+        return [
+            'success' => false,
+            'mode' => 'local_cli',
+            'execution_time_ms' => round((microtime(true) - $startTime) * 1000),
+            'error' => 'proc_open_unavailable',
+            'script_path' => $scriptPath
+        ];
+    }
+
+    $command = escapeshellcmd($pythonBinary) . ' ' . escapeshellarg($scriptPath);
+    $descriptorSpec = [
+        0 => ['pipe', 'r'],
+        1 => ['pipe', 'w'],
+        2 => ['pipe', 'w']
+    ];
+
+    $process = proc_open($command, $descriptorSpec, $pipes, dirname($scriptPath));
+    if (!is_resource($process)) {
+        return [
+            'success' => false,
+            'mode' => 'local_cli',
+            'execution_time_ms' => round((microtime(true) - $startTime) * 1000),
+            'error' => 'proc_open_failed',
+            'command' => $command
+        ];
+    }
+
+    fclose($pipes[0]);
+    stream_set_blocking($pipes[1], false);
+    stream_set_blocking($pipes[2], false);
+
+    $stdout = '';
+    $stderr = '';
+    $timedOut = false;
+    $deadline = microtime(true) + $timeout;
+
+    while (true) {
+        $stdout .= stream_get_contents($pipes[1]);
+        $stderr .= stream_get_contents($pipes[2]);
+
+        $status = proc_get_status($process);
+        if (!$status['running']) {
+            break;
+        }
+
+        if (microtime(true) > $deadline) {
+            $timedOut = true;
+            proc_terminate($process, 9);
+            usleep(100000);
+            break;
+        }
+
+        usleep(100000);
+    }
+
+    $stdout .= stream_get_contents($pipes[1]);
+    $stderr .= stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    $exitCode = proc_close($process);
+    $executionTime = round((microtime(true) - $startTime) * 1000);
+
+    if ($timedOut) {
+        return [
+            'success' => false,
+            'mode' => 'local_cli',
+            'execution_time_ms' => $executionTime,
+            'error' => 'timeout',
+            'timeout_seconds' => $timeout,
+            'stdout_tail' => trimLogOutput($stdout),
+            'stderr_tail' => trimLogOutput($stderr)
+        ];
+    }
+
+    if ($exitCode !== 0) {
+        return [
+            'success' => false,
+            'mode' => 'local_cli',
+            'execution_time_ms' => $executionTime,
+            'exit_code' => $exitCode,
+            'stdout_tail' => trimLogOutput($stdout),
+            'stderr_tail' => trimLogOutput($stderr)
+        ];
+    }
+
+    return [
+        'success' => true,
+        'mode' => 'local_cli',
+        'execution_time_ms' => $executionTime,
+        'exit_code' => $exitCode,
+        'stdout_tail' => trimLogOutput($stdout),
+        'stderr_tail' => trimLogOutput($stderr)
+    ];
+}
+
+function executeScript($script) {
+    global $executionMode, $maxRetriesPerScript, $retryDelayMs;
+
+    writeLog('INFO', 'Starting script execution', [
+        'script' => $script['name'],
+        'mode' => $executionMode,
+        'url' => $script['url'] ?? null,
+        'path' => $script['path'] ?? null,
+        'interval_minutes' => isset($script['interval_minutes']) ? $script['interval_minutes'] : 'always'
     ]);
-    
-    return true;
+
+    $lastResult = ['success' => false, 'error' => 'no_attempt'];
+
+    $primaryMode = ($executionMode === 'http') ? 'http' : 'local_cli';
+
+    for ($attempt = 1; $attempt <= $maxRetriesPerScript; $attempt++) {
+        $lastResult = ($primaryMode === 'http')
+            ? executeScriptHttp($script)
+            : executeScriptLocal($script);
+
+        if (
+            empty($lastResult['success'])
+            && $primaryMode === 'local_cli'
+            && !empty($script['url'])
+            && in_array($lastResult['error'] ?? '', ['script_path_missing_or_not_found', 'proc_open_unavailable', 'proc_open_failed'], true)
+        ) {
+            $fallbackResult = executeScriptHttp($script);
+            $fallbackResult['fallback_from'] = 'local_cli';
+            $lastResult = $fallbackResult;
+        }
+
+        $context = $lastResult;
+        $context['script'] = $script['name'];
+        $context['attempt'] = $attempt;
+        $context['max_attempts'] = $maxRetriesPerScript;
+
+        if (!empty($lastResult['success'])) {
+            writeLog('INFO', 'Script executed successfully', $context);
+            return true;
+        }
+
+        writeLog('ERROR', 'Script execution failed', $context);
+
+        if ($attempt < $maxRetriesPerScript && $retryDelayMs > 0) {
+            usleep($retryDelayMs * 1000);
+        }
+    }
+
+    return false;
 }
 
 /**
@@ -336,6 +512,9 @@ try {
     
     writeLog('INFO', 'CLI CronJob Runner started', [
         'pid' => getmypid(),
+        'mode' => $executionMode,
+        'max_retries_per_script' => $maxRetriesPerScript,
+        'retry_delay_ms' => $retryDelayMs,
         'scripts_to_run' => count($scriptsToRun),
         'scripts' => array_column($scriptsToRun, 'name')
     ]);
