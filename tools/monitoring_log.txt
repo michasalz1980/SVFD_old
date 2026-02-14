@@ -1,4 +1,3 @@
-FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 after 5214 ms: Connection timed out)
 Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5214 ms: Connection timed out)
 MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
 
@@ -998,3 +997,4 @@ FritzBox: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 443 afte
 Wechselrichter: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8086 after 5203 ms: Connection timed out)
 MBUS Gateway: Error (Failed to connect to iykjlt0jy435sqad.myfritz.net port 8089 after 5202 ms: Connection timed out)
 
+{"overall_status":"ok","checked_at":"2026-02-14T12:42:59+00:00","duration_ms":2002,"summary":{"resource_count":4,"ok_count":4,"error_count":0},"resources":{"FritzBox":{"url":"https://iykjlt0jy435sqad.myfritz.net","status":"OK","detail":"HTTP 200","curl_errno":0,"http_code":200,"duration_ms":1998},"MBUS Gateway":{"url":"http://iykjlt0jy435sqad.myfritz.net:8089","status":"OK","detail":"HTTP 200","curl_errno":0,"http_code":200,"duration_ms":1998},"WebCam":{"url":"https://iykjlt0jy435sqad.myfritz.net:8088","status":"OK","detail":"HTTP 200","curl_errno":0,"http_code":200,"duration_ms":2002},"Wechselrichter":{"url":"https://iykjlt0jy435sqad.myfritz.net:8086","status":"OK","detail":"HTTP 200","curl_errno":0,"http_code":200,"duration_ms":1998}},"telemetry":{"error_rate":0,"timeout_count":0,"timeout_rate":0,"error_type_counts":[],"endpoint_duration_ms":2002},"meta":{"parallel_fallback_used":false},"mail":{"attempted":false,"deferred":false,"sent":false}}

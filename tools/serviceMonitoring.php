@@ -39,6 +39,85 @@ function normalizeStatus(int $httpCode, string $curlError, int $curlErrno): stri
     return ($httpCode >= 200 && $httpCode < 400) ? 'OK' : 'Error';
 }
 
+function classifyErrorType(array $resource): ?string
+{
+    $status = (string) ($resource['status'] ?? '');
+    if ($status === 'OK') {
+        return null;
+    }
+
+    $curlErrno = (int) ($resource['curl_errno'] ?? 0);
+    $httpCode = (int) ($resource['http_code'] ?? 0);
+    $detail = strtolower((string) ($resource['detail'] ?? ''));
+
+    if ($curlErrno === 28 || strpos($detail, 'timed out') !== false) {
+        return 'timeout';
+    }
+    if ($curlErrno === 6) {
+        return 'dns_error';
+    }
+    if ($curlErrno === 7) {
+        return 'connect_error';
+    }
+    if ($curlErrno === 35 || $curlErrno === 56) {
+        return 'tls_error';
+    }
+    if ($httpCode >= 500) {
+        return 'upstream_http_5xx';
+    }
+    if ($httpCode >= 400) {
+        return 'upstream_http_4xx';
+    }
+    if ($httpCode === 0 && $curlErrno === 0) {
+        return 'empty_transport';
+    }
+
+    return 'transport_error';
+}
+
+function buildTelemetry(array $results, int $totalDurationMs): array
+{
+    $resourceCount = count($results);
+    $okCount = 0;
+    $errorCount = 0;
+    $timeoutCount = 0;
+    $errorTypeCounts = [];
+
+    foreach ($results as $resource) {
+        if ((string) ($resource['status'] ?? '') === 'OK') {
+            $okCount++;
+            continue;
+        }
+
+        $errorCount++;
+        $errorType = classifyErrorType($resource);
+        if ($errorType !== null) {
+            if (!isset($errorTypeCounts[$errorType])) {
+                $errorTypeCounts[$errorType] = 0;
+            }
+            $errorTypeCounts[$errorType]++;
+            if ($errorType === 'timeout') {
+                $timeoutCount++;
+            }
+        }
+    }
+
+    ksort($errorTypeCounts);
+    $errorRate = ($resourceCount > 0) ? round($errorCount / $resourceCount, 4) : 0.0;
+    $timeoutRate = ($resourceCount > 0) ? round($timeoutCount / $resourceCount, 4) : 0.0;
+
+    return [
+        'resource_count' => $resourceCount,
+        'ok_count' => $okCount,
+        'error_count' => $errorCount,
+        'error_rate' => $errorRate,
+        'timeout_count' => $timeoutCount,
+        'timeout_rate' => $timeoutRate,
+        'endpoint_duration_ms' => $totalDurationMs,
+        'error_type_counts' => $errorTypeCounts,
+    ];
+}
+
 function checkResourcesParallel(array $resources, array $config): array
 {
     $results = [];
@@ -306,6 +385,21 @@ function writeJsonResponse(array $payload, int $statusCode = 200): void
     echo json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 }
 
+function finishHttpResponse(): void
+{
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+        return;
+    }
+    if (function_exists('litespeed_finish_request')) {
+        litespeed_finish_request();
+        return;
+    }
+
+    @ob_flush();
+    @flush();
+}
+
 try {
     $scriptStartedAt = microtime(true);
     $results = checkResourcesParallel($resources, $config);
@@ -315,28 +409,26 @@ try {
         $usedFallback = true;
     }
     $totalDurationMs = (int) round((microtime(true) - $scriptStartedAt) * 1000);
-
-    $okCount = 0;
-    $errorCount = 0;
-    foreach ($results as $data) {
-        if ($data['status'] === 'OK') {
-            $okCount++;
-        } else {
-            $errorCount++;
-        }
-    }
-    $hasError = $errorCount > 0;
+    $telemetry = buildTelemetry($results, $totalDurationMs);
+    $hasError = (int) $telemetry['error_count'] > 0;
 
     $payload = [
         'overall_status' => $hasError ? 'degraded' : 'ok',
         'checked_at' => gmdate('c'),
         'duration_ms' => $totalDurationMs,
         'summary' => [
-            'resource_count' => count($results),
-            'ok_count' => $okCount,
-            'error_count' => $errorCount,
+            'resource_count' => (int) $telemetry['resource_count'],
+            'ok_count' => (int) $telemetry['ok_count'],
+            'error_count' => (int) $telemetry['error_count'],
         ],
         'resources' => $results,
+        'telemetry' => [
+            'error_rate' => (float) $telemetry['error_rate'],
+            'timeout_count' => (int) $telemetry['timeout_count'],
+            'timeout_rate' => (float) $telemetry['timeout_rate'],
+            'error_type_counts' => $telemetry['error_type_counts'],
+            'endpoint_duration_ms' => (int) $telemetry['endpoint_duration_ms'],
+        ],
         'meta' => [
             'parallel_fallback_used' => $usedFallback,
         ],
@@ -344,8 +436,28 @@ try {
 
     $state = loadState((string) $config['state_file']);
     $mailAttempted = shouldSendMail($hasError, $config, $state);
-    $mailSent = false;
+    $payload['mail'] = [
+        'attempted' => $mailAttempted,
+        'deferred' => true,
+    ];
 
+    $format = $_GET['format'] ?? '';
+    if ($format === 'html') {
+        if (!headers_sent()) {
+            header('Content-Type: text/html; charset=UTF-8');
+            http_response_code(200);
+        }
+        echo buildHtml($payload);
+    } else {
+        writeJsonResponse($payload, 200);
+    }
+
+    if (function_exists('ignore_user_abort')) {
+        @ignore_user_abort(true);
+    }
+    finishHttpResponse();
+
+    $mailSent = false;
     if ($mailAttempted) {
         $subjectPrefix = $hasError ? '#SVFD | Monitoring Fehler erkannt' : 'SVFD | Monitoring Status OK';
         $subject = $subjectPrefix . ' - ' . date('Y-m-d H:i:s');
@@ -362,25 +474,15 @@ try {
     }
     saveState((string) $config['state_file'], $state);
 
-    $payload['mail'] = [
+    $logPayload = $payload;
+    $logPayload['mail'] = [
         'attempted' => $mailAttempted,
+        'deferred' => false,
         'sent' => $mailSent,
     ];
+    appendLogLine((string) $config['log_file'], (int) $config['max_log_lines'], $logPayload);
 
-    appendLogLine((string) $config['log_file'], (int) $config['max_log_lines'], $payload);
-
-    $format = $_GET['format'] ?? '';
-    if ($format === 'html') {
-        if (!headers_sent()) {
-            header('Content-Type: text/html; charset=UTF-8');
-            http_response_code(200);
-        }
-        echo buildHtml($payload);
-    } else {
-        writeJsonResponse($payload, 200);
-    }
-
-    exit($hasError ? 1 : 0);
+    exit(0);
 } catch (Throwable $e) {
     $payload = [
         'overall_status' => 'error',
