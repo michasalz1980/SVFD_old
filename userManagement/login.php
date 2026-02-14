@@ -220,47 +220,6 @@ $seasonInfo = $auth->getSeasonInfo();
             text-align: center;
         }
         
-        .test-accounts {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-top: 1.5rem;
-            font-size: 0.85rem;
-        }
-        
-        .test-accounts h4 {
-            color: #2c5aa0;
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-        
-        .test-account {
-            background: white;
-            padding: 0.8rem;
-            margin-bottom: 0.8rem;
-            border-radius: 8px;
-            border: 1px solid #e1e5e9;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .test-account:hover {
-            background: #f0f8ff;
-            border-color: #4facfe;
-        }
-        
-        .test-account strong {
-            color: #2c5aa0;
-        }
-        
-        .test-account code {
-            background: #e9ecef;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.8rem;
-        }
-        
         .back-to-public {
             text-align: center;
             margin-top: 2rem;
@@ -351,30 +310,6 @@ $seasonInfo = $auth->getSeasonInfo();
             <button type="submit" class="btn">Anmelden</button>
         </form>
         
-        <div class="test-accounts">
-            <h4>🧪 Test-Zugänge (nur für Entwicklung):</h4>
-            
-            <div class="test-account" onclick="fillLogin('admin', 'Freibad2024!Admin')">
-                <strong>Administrator:</strong><br>
-                Benutzer: <code>admin</code> | Passwort: <code>Freibad2024!Admin</code>
-            </div>
-            
-            <div class="test-account" onclick="fillLogin('vorstand1', 'Vorstand2024!')">
-                <strong>Vorstand:</strong><br>
-                Benutzer: <code>vorstand1</code> | Passwort: <code>Vorstand2024!</code>
-            </div>
-            
-            <div class="test-account" onclick="fillLogin('kassenwart', 'Kasse2024!')">
-                <strong>Kassenwart:</strong><br>
-                Benutzer: <code>kassenwart</code> | Passwort: <code>Kasse2024!</code>
-            </div>
-            
-            <div class="test-account" onclick="fillLogin('technik', 'Technik2024!')">
-                <strong>Technik:</strong><br>
-                Benutzer: <code>technik</code> | Passwort: <code>Technik2024!</code>
-            </div>
-        </div>
-        
         <div class="back-to-public">
             <a href="/public/">⬅ Zurück zur öffentlichen Website</a>
         </div>
@@ -385,23 +320,6 @@ $seasonInfo = $auth->getSeasonInfo();
     </div>
     
     <script>
-        function fillLogin(username, password) {
-            document.getElementById('username').value = username;
-            document.getElementById('password').value = password;
-            
-            // Visual feedback
-            const usernameField = document.getElementById('username');
-            const passwordField = document.getElementById('password');
-            
-            usernameField.style.background = '#e8f5e8';
-            passwordField.style.background = '#e8f5e8';
-            
-            setTimeout(() => {
-                usernameField.style.background = '';
-                passwordField.style.background = '';
-            }, 1000);
-        }
-        
         // Auto-focus auf Username-Feld
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('username').focus();

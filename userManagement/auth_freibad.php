@@ -105,36 +105,6 @@ class FreibadDabringhausenAuth {
                 'last_login' => null,
                 'active' => true,
                 'department' => 'Systemverwaltung'
-            ],
-            'vorstand1' => [
-                'password' => password_hash('Vorstand2024!', PASSWORD_DEFAULT),
-                'role' => 'vorstand',
-                'name' => '1. Vorsitzende/r',
-                'email' => 'vorstand@freibad-dabringhausen.de',
-                'created' => date('Y-m-d H:i:s'),
-                'last_login' => null,
-                'active' => true,
-                'department' => 'Vereinsführung'
-            ],
-            'kassenwart' => [
-                'password' => password_hash('Kasse2024!', PASSWORD_DEFAULT),
-                'role' => 'kassenwart',
-                'name' => 'Kassenwart/in',
-                'email' => 'kasse@freibad-dabringhausen.de',
-                'created' => date('Y-m-d H:i:s'),
-                'last_login' => null,
-                'active' => true,
-                'department' => 'Finanzen'
-            ],
-            'technik' => [
-                'password' => password_hash('Technik2024!', PASSWORD_DEFAULT),
-                'role' => 'technik',
-                'name' => 'Technischer Leiter',
-                'email' => 'technik@freibad-dabringhausen.de',
-                'created' => date('Y-m-d H:i:s'),
-                'last_login' => null,
-                'active' => true,
-                'department' => 'Technik & Wartung'
             ]
         ];
         
