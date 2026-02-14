@@ -11,7 +11,7 @@
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'svfd_schedule');
 define('DB_USER', 'svfd_Schedule');
-define('DB_PASS', 'REDACTED');
+define('DB_PASS', 'rq*6X4s82');
 define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', 'utf8mb4_unicode_ci');
 

@@ -17,13 +17,13 @@ return [
     'database' => [
         'host' => 'localhost',
         'username' => 'svfd_Schedule',
-        'password' => 'REDACTED',
+        'password' => 'rq*6X4s82',
         'name' => 'svfd_schedule',
     ],
     'weather_api' => [
         'lat' => '51.085620',
         'lon' => '7.192630',
-        'api_key' => 'REDACTED',
+        'api_key' => '3263986d38dc6001ed46f3b327841ac4',
         'base_url' => 'https://api.openweathermap.org/data/2.5/forecast',
     ],
     'start_date' => '2024-07-05',
@@ -32,7 +32,7 @@ return [
     'smtp' => [
         'host' => 'freibad-dabringhausen.de',
         'username' => 'info@freibad-dabringhausen.de',
-        'password' => 'REDACTED',
+        'password' => 'Sabilokizu',
         'port' => 465,
         'encryption' => 'ssl'
     ]

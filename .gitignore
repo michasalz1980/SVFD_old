@@ -1,10 +1,18 @@
 # Logs
 **/logs/
 **/*.log
+jobs/locks/
+
+# Runtime state files
+abwasser/first_measurement.cache
+dashboard/first_measurement.cache
+power-dashboard/first_power_measurement.cache
 
 # Cache/tmp
 **/tmp/
 **/cache/
+.deploy-logs/
+.deploy-backup/
 
 # Environment/Secrets
 **/.env

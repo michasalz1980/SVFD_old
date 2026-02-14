@@ -5,12 +5,12 @@ return [
         'dbname' => 'svfd_schedule',
         'charset' => 'utf8mb4',
         'user' => 'svfd_Schedule',
-        'pass' => 'REDACTED'
+        'pass' => 'rq*6X4s82'
     ],
     'api' => [
         'base_url' => 'https://freibad-dabringhausen-api.shiftjuggler.com/api/',
         'user' => 'salz.hausbau@gmail.com',
-        'password' => 'REDACTED'
+        'password' => 'hoh8Xoi42!'
     ],
     'main_location_id' => 1,
     'workplace_id' => 10,

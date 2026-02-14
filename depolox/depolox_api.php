@@ -25,7 +25,7 @@ function debug_log($message) {
 $config = [
     'host' => 'localhost',
     'username' => 'svfd_Schedule',
-    'password' => 'REDACTED',
+    'password' => 'rq*6X4s82',
     'database' => 'svfd_schedule',
     'charset' => 'utf8mb4'
 ];

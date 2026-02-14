@@ -52,3 +52,10 @@ This repo is part of the migration planning for:
 - Mail migration to Google Workspace
 - Hardening and cleanup
 
+## Deploy Automation
+- FTP upload/download + URL checks + log validation:
+  - `scripts/deploy/svfd_deploy.sh`
+- Optional git hook installer for auto-run on push:
+  - `scripts/deploy/install_post_push_hook.sh`
+- Setup and usage:
+  - `documentation/deploy_automation.md`

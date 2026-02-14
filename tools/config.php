@@ -17,7 +17,7 @@ return [
     'database' => [
         'host' => 'localhost',
         'username' => 'svfd_Schedule',
-        'password' => 'REDACTED',
+        'password' => 'rq*6X4s82',
         'name' => 'svfd_schedule',
     ],
     // Start and end date per season

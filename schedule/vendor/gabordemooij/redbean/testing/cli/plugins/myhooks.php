@@ -16,7 +16,7 @@ $ini['CUBRID'] = array(
 	'host'	=> 'localhost',
 	'schema' => 'cubase',
 	'user'	=> 'dba',
-	'pass'	=> 'REDACTED'
+	'pass'	=> ''
 );
 
 $colorMap[ 'CUBRID' ] = '0;35';

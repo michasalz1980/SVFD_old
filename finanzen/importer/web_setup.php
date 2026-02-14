@@ -1491,7 +1491,7 @@ ls -la <?php echo defined('CSV_INPUT_DIR') ? CSV_INPUT_DIR : './csv_import/'; ?>
 define('DB_HOST', '" . addslashes($config['db_host']) . "');
 define('DB_NAME', '" . addslashes($config['db_name']) . "');
 define('DB_USER', '" . addslashes($config['db_user']) . "');
-define('DB_PASS', 'REDACTED'db_password']) . "');
+define('DB_PASS', '" . addslashes($config['db_password']) . "');
 define('DB_CHARSET', 'utf8mb4');
 
 // Dateipfade

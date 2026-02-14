@@ -4270,7 +4270,7 @@ EOT;
      * $signatureId = $cpdf->addSignature([
      *   'signcert' => file_get_contents('dompdf.crt'),
      *   'privkey' => file_get_contents('dompdf.key'),
-     *   'password' => 'REDACTED',
+     *   'password' => 'password',
      *   'name' => 'DomPDF DEMO',
      *   'location' => 'Home',
      *   'reason' => 'First Form',

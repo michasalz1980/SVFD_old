@@ -17,7 +17,7 @@ return [
     'database' => [
         'host' => 'localhost',
         'username' => 'svfd_Schedule',
-        'password' => 'REDACTED',
+        'password' => 'rq*6X4s82',
         'name' => 'svfd_schedule',
     ],
     'start_date' => '2026-07-17',
@@ -26,7 +26,7 @@ return [
     'smtp' => [
         'host' => 'freibad-dabringhausen.de',
         'username' => 'info@freibad-dabringhausen.de',
-        'password' => 'REDACTED',
+        'password' => 'Sabilokizu',
         'port' => 465,
         'encryption' => 'ssl'
     ]
