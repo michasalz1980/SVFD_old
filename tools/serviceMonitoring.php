@@ -31,9 +31,9 @@ function asBool(mixed $value): bool
     return filter_var($value, FILTER_VALIDATE_BOOLEAN);
 }
 
-function normalizeStatus(int $httpCode, string $curlError): string
+function normalizeStatus(int $httpCode, string $curlError, int $curlErrno): string
 {
-    if ($curlError !== '') {
+    if ($curlError !== '' || $curlErrno !== 0) {
         return 'Error';
     }
     return ($httpCode >= 200 && $httpCode < 400) ? 'OK' : 'Error';
@@ -107,15 +107,22 @@ function checkResourcesParallel(array $resources, array $config): array
     foreach ($handles as $meta) {
         $ch = $meta['handle'];
         $curlError = curl_error($ch);
+        $curlErrno = curl_errno($ch);
         $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $durationMs = (int) round((microtime(true) - $meta['started_at']) * 1000);
-        $status = normalizeStatus($httpCode, $curlError);
+        $status = normalizeStatus($httpCode, $curlError, $curlErrno);
         $detail = ($curlError !== '') ? $curlError : ('HTTP ' . $httpCode);
+        if ($curlErrno !== 0 && $curlError === '') {
+            $detail = 'cURL error ' . $curlErrno;
+        } elseif ($curlErrno !== 0) {
+            $detail .= ' (errno ' . $curlErrno . ')';
+        }
 
         $results[$meta['name']] = [
             'url' => $meta['url'],
             'status' => $status,
             'detail' => $detail,
+            'curl_errno' => $curlErrno,
             'http_code' => $httpCode,
             'duration_ms' => $durationMs,
         ];
@@ -128,6 +135,79 @@ function checkResourcesParallel(array $resources, array $config): array
     ksort($results);
 
     return $results;
+}
+
+function checkResourcesSequential(array $resources, array $config): array
+{
+    $results = [];
+    foreach ($resources as $name => $url) {
+        $ch = curl_init($url);
+        if ($ch === false) {
+            $results[$name] = [
+                'url' => $url,
+                'status' => 'Error',
+                'detail' => 'curl_init failed',
+                'curl_errno' => 0,
+                'http_code' => 0,
+                'duration_ms' => 0,
+            ];
+            continue;
+        }
+
+        $startedAt = microtime(true);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_NOBODY => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 3,
+            CURLOPT_CONNECTTIMEOUT => (int) $config['per_resource_connect_timeout'],
+            CURLOPT_TIMEOUT => (int) $config['per_resource_timeout'],
+            CURLOPT_SSL_VERIFYPEER => asBool($config['ssl_verify_peer']),
+            CURLOPT_SSL_VERIFYHOST => asBool($config['ssl_verify_host']) ? 2 : 0,
+            CURLOPT_USERAGENT => 'SVFD-ServiceMonitoring/2',
+        ]);
+
+        curl_exec($ch);
+        $curlError = curl_error($ch);
+        $curlErrno = curl_errno($ch);
+        $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $durationMs = (int) round((microtime(true) - $startedAt) * 1000);
+        $status = normalizeStatus($httpCode, $curlError, $curlErrno);
+        $detail = ($curlError !== '') ? $curlError : ('HTTP ' . $httpCode);
+        if ($curlErrno !== 0 && $curlError === '') {
+            $detail = 'cURL error ' . $curlErrno;
+        } elseif ($curlErrno !== 0) {
+            $detail .= ' (errno ' . $curlErrno . ')';
+        }
+
+        $results[$name] = [
+            'url' => $url,
+            'status' => $status,
+            'detail' => $detail,
+            'curl_errno' => $curlErrno,
+            'http_code' => $httpCode,
+            'duration_ms' => $durationMs,
+        ];
+        curl_close($ch);
+    }
+
+    ksort($results);
+    return $results;
+}
+
+function hasOnlyEmptyTransportSignals(array $results): bool
+{
+    if (count($results) === 0) {
+        return false;
+    }
+    foreach ($results as $row) {
+        $http = (int) ($row['http_code'] ?? -1);
+        $errno = (int) ($row['curl_errno'] ?? -1);
+        if (!($http === 0 && $errno === 0)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 function loadState(string $stateFile): array
@@ -229,6 +309,11 @@ function writeJsonResponse(array $payload, int $statusCode = 200): void
 try {
     $scriptStartedAt = microtime(true);
     $results = checkResourcesParallel($resources, $config);
+    $usedFallback = false;
+    if (hasOnlyEmptyTransportSignals($results)) {
+        $results = checkResourcesSequential($resources, $config);
+        $usedFallback = true;
+    }
     $totalDurationMs = (int) round((microtime(true) - $scriptStartedAt) * 1000);
 
     $okCount = 0;
@@ -252,6 +337,9 @@ try {
             'error_count' => $errorCount,
         ],
         'resources' => $results,
+        'meta' => [
+            'parallel_fallback_used' => $usedFallback,
+        ],
     ];
 
     $state = loadState((string) $config['state_file']);
