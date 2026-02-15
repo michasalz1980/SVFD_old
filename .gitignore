@@ -18,6 +18,7 @@ power-dashboard/first_power_measurement.cache
 # Environment/Secrets
 **/.env
 **/.env.*
+!**/.env.example
 **/.htpasswd
 
 # Data archives (excluded for size/sensitivity)
